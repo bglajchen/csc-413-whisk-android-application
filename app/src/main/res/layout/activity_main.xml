@@ -1,0 +1,128 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
+    android:background="@drawable/bgii">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:id="@+id/enterIngredients"
+        android:text="Enter Ingredients"
+        android:gravity="center"
+        android:padding="4dp"
+        android:layout_alignBottom="@+id/ingredients"
+        android:layout_alignTop="@+id/ingredients"
+        android:textColor="#0728ff" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ingredients"
+        android:layout_margin="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/enterIngredients"
+        android:layout_alignParentRight="true" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/enterIngredients"
+        android:id="@+id/enterRecipeTitle"
+        android:text="Enter Recipe Title"
+        android:gravity="center"
+        android:padding="4dp"
+        android:layout_alignBottom="@+id/recipeTitle"
+        android:layout_alignTop="@+id/recipeTitle"
+        android:textColor="#070cff" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/recipeTitle"
+        android:layout_margin="16dp"
+        android:layout_below="@+id/ingredients"
+        android:layout_toRightOf="@+id/enterRecipeTitle"
+        android:layout_alignParentRight="true"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/enterRecipeTitle"
+        android:id="@+id/enterRecipeContent"
+        android:text="Enter Recipe Content"
+        android:gravity="center"
+        android:padding="4dp"
+        android:layout_alignBottom="@+id/recipeContent"
+        android:layout_alignTop="@+id/recipeContent"
+        android:textColor="#0608ff" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/recipeContent"
+        android:layout_margin="16dp"
+        android:layout_below="@+id/recipeTitle"
+        android:layout_toRightOf="@+id/enterRecipeContent"
+        android:layout_alignParentRight="true"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Recipe"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:id="@+id/addRecipe"
+        android:onClick="addRecipe"
+        android:layout_below="@+id/enterRecipeContent"
+        android:gravity="center"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/getRecipe"
+
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View Recipes"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:id="@+id/viewRecipes"
+        android:layout_marginTop="16dp"
+        android:onClick="viewRecipes"
+        android:layout_below="@+id/addRecipe"
+        android:gravity="center"
+        android:layout_alignParentLeft="true"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get Recipe"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:id="@+id/getRecipe"
+        android:layout_marginTop="16dp"
+        android:onClick="getRecipe"
+        android:layout_below="@+id/recipeContent"
+        android:gravity="center"
+        android:layout_alignParentRight="true"
+        />
+
+
+</RelativeLayout>
