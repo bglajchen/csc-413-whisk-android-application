@@ -1,7 +1,9 @@
 package com.junt_t.googlemapdemp;
 
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,8 +22,9 @@ import java.util.List;
 import static com.junt_t.googlemapdemp.R.id.TFaddress;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
     private GoogleMap mMap;
+    private EditText location_tf;
+    private String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +37,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void onSearch(View view) {
-        EditText location_tf = ( EditText)findViewById(R.id.TFaddress);
-        String location = location_tf.getText().toString();
+        location_tf = ( EditText)findViewById(R.id.TFaddress);
+        location = location_tf.getText().toString();
         List<Address> addressList = null;
 
         if(location != null || !location.equals("")) {
@@ -52,6 +55,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.addMarker(new MarkerOptions().position(latLng).title(location));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
         }
+    }
+
+    public void getDirection(View view) {
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW);
+        location_tf = ( EditText)findViewById(R.id.TFaddress);
+        location = location_tf.getText().toString();
+
+        mapIntent.setData(Uri.parse("google.navigation:q=" + Uri.encode(location)));
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
     }
 
     @Override
