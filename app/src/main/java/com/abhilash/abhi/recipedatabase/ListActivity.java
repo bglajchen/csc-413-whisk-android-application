@@ -35,16 +35,7 @@ public class ListActivity extends MainActivity {
                      method = extras.getString("method");
                     ingredient = extras.getString("ingredients");
                 }
-
-
                 Cursor c = recipeDB.rawQuery("SELECT * FROM recipes", null);;
-
-                    if (method.equals("getRecipe")) {
-                        String sql = "SELECT * FROM recipes WHERE ingredients = ?";
-                        c = recipeDB.rawQuery(sql, new String[] {ingredient});;
-                    }
-
-
                 int ingredientsIndex = c.getColumnIndex("ingredients");
                 int titleIndex = c.getColumnIndex("recipeTitle");
                 int contentIndex = c.getColumnIndex("recipeContent");
@@ -60,9 +51,11 @@ public class ListActivity extends MainActivity {
                     cont.add(c.getString(contentIndex));
                     c.moveToNext();
                 }
+                arrayAdapter.notifyDataSetChanged();
 
 
-                //arrayAdapter.notifyDataSetChanged();
+
+
 
 
 
@@ -75,14 +68,14 @@ public class ListActivity extends MainActivity {
 
             ListView listView = (ListView) findViewById(R.id.listView);
             arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, titles);
-            listView.setAdapter(arrayAdapter);
+         listView.setAdapter(arrayAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Intent intent = new Intent(getApplicationContext(), ContentActivity.class);
-                intent.putExtra("content", cont.get(position));
+                intent.putExtra("recipeURL", cont.get(position));
                 startActivity(intent);
 
             }

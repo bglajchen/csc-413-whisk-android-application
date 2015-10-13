@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 public class ContentActivity extends AppCompatActivity {
@@ -17,11 +19,16 @@ public class ContentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
-        textView = (TextView) findViewById(R.id.textView);
-        Intent intent = getIntent();
-        String content = intent.getStringExtra("content");
-        textView.setText(content);
+        WebView webView = (WebView) findViewById(R.id.webView);
 
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebViewClient(new WebViewClient());
+
+        Intent i = getIntent();
+
+        String url = i.getStringExtra("recipeURL");
+
+        webView.loadUrl(url);
     }
 
 
