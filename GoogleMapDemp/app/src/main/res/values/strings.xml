@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">GoogleMapDemp</string>
-    <string name="title_activity_maps">MapDemo</string>
-    <string name="button_search">SEARCH</string>
-    <string name="tfSearch">DemoMap</string>
-    <string name="title_activity_content">ContentActivity</string>
-</resources>
