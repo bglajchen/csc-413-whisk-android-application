@@ -4,4 +4,11 @@
     tools:context="com.abhilash.abhi.recipedatabase.ContentActivity">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
+
+    <item android:id="@+id/action_save"
+        android:icon="@drawable/save"
+        android:title="@string/action_save"
+        app:showAsAction="ifRoom"/>
+
+
 </menu>

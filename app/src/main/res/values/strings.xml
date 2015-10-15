@@ -6,4 +6,6 @@
     <string name="title_activity_result">ResultActivity</string>
     <string name="title_activity_list">ListActivity</string>
     <string name="title_activity_content">ContentActivity</string>
+    <string name="action_save">Save</string>
+
 </resources>

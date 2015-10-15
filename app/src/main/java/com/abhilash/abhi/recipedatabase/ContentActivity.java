@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,33 +17,31 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
-public class ContentActivity extends AppCompatActivity {
+public class ContentActivity extends MainActivity {
 
-    TextView textView;
-
+    String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
         WebView webView = (WebView) findViewById(R.id.webView);
-
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient());
 
         Intent i = getIntent();
+        //Bundle extras = getIntent().getExtras();
+        //if (extras != null) {
+        //   recipeId = extras.getLong("recipeId");
+        //}
 
-        String url = i.getStringExtra("recipeURL");
+        url = i.getStringExtra("recipeURL");
 
         webView.loadUrl(url);
 
-        //showAlert();
     }
 
-
     public void showAlert() {
-
-        final SharedPreferences sharedPreferences = this.getSharedPreferences("com.abhilash.abhi.recipedatabase", Context.MODE_PRIVATE);
 
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
@@ -49,19 +50,29 @@ public class ContentActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        sharedPreferences.edit().putString("language", "english").apply();
+
+                        saveFavorites();
                         return;
                     }
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        return;
-                    }
-                })
+                .setNegativeButton("No", null)
                 .show();
 
     }
+
+
+    public void saveFavorites(){
+
+        String sql = "INSERT INTO favorites (recipeTitle, recipeContent) SELECT recipeTitle, recipeContent FROM recipes WHERE recipeContent = ?";
+
+
+        SQLiteStatement statement = recipeDB.compileStatement(sql);
+
+        statement.bindString(1, url);
+        statement.execute();
+        Message.message(this, "Recipe Saved");
+    }
+
 
 
     @Override
@@ -79,10 +90,13 @@ public class ContentActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        switch (item.getItemId()) {
+            case R.id.action_save:
+                showAlert();
+                return super.onOptionsItemSelected(item);
+            default:
+                return true;
 
-        return super.onOptionsItemSelected(item);
+        }
     }
 }

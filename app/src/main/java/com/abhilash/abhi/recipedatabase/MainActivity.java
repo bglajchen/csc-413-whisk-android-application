@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         recipeDB = this.openOrCreateDatabase("Recipes", MODE_PRIVATE, null);
         recipeDB.execSQL("CREATE TABLE IF NOT EXISTS recipes (id INTEGER PRIMARY KEY, recipeTitle VARCHAR, ingredients VARCHAR, recipeContent VARCHAR)");
+        recipeDB.execSQL("CREATE TABLE IF NOT EXISTS favorites (id INTEGER PRIMARY KEY, recipeTitle VARCHAR, ingredients VARCHAR, recipeContent VARCHAR)");
         ingredients = (EditText) findViewById(R.id.ingredients);
         recipeTitle = (EditText) findViewById(R.id.recipeTitle);
         recipeContent = (EditText) findViewById(R.id.recipeContent);
@@ -152,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     Intent intent = new Intent(getApplicationContext(), ListActivity.class);
+                    intent.putExtra("tableName", "recipes");
                     startActivity(intent);
 
                 }
@@ -165,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    
     public void addRecipe(View view){
 
         String ingredient = ingredients.getText().toString();
@@ -175,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
         try {
 
 
-            String sql = "INSERT INTO recipes (recipetitle, ingredients, recipeContent) VALUES (? , ? , ?)";
+            String sql = "INSERT INTO favorites (recipeTitle, ingredients, recipeContent) VALUES (? , ? , ?)";
 
 
             SQLiteStatement statement = recipeDB.compileStatement(sql);
@@ -191,26 +192,16 @@ public class MainActivity extends AppCompatActivity {
 
         }catch (Exception e) {
 
-        e.printStackTrace();
+            e.printStackTrace();
 
         }
 
     }
 
     public void viewRecipes(View view){
-        try {
-
-            DownloadTask task = new DownloadTask();
-            task.execute("http://www.recipepuppy.com/api/");
-
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-
-        }
-
+        Intent intent = new Intent(getApplicationContext(), ListActivity.class);
+        intent.putExtra("tableName", "favorites");
+        startActivity(intent);
     }
 
     public void getRecipe(View view){
@@ -224,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
 
         DownloadTask task = new DownloadTask();
         task.execute("http://www.recipepuppy.com/api/?i=" + encodedIngredientsName);
+
     }
 
     @Override
