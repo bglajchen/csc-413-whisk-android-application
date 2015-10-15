@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.tiffany.splashscreen.R;
+
 public class SplashScreen extends AppCompatActivity {
 
     TextView textView;
