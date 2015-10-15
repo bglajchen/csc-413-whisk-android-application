@@ -32,6 +32,19 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.abhilash.abhi.recipedatabase.ListActivity" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Recipe"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:id="@+id/saveRecipe"
+                android:onClick="addRecipe"
+                android:gravity="center"
+                android:layout_alignParentRight="true"
+                >
+
+            </Button>
         </activity>
     </application>
 

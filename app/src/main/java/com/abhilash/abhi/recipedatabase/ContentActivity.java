@@ -1,6 +1,10 @@
 package com.abhilash.abhi.recipedatabase;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -29,6 +33,34 @@ public class ContentActivity extends AppCompatActivity {
         String url = i.getStringExtra("recipeURL");
 
         webView.loadUrl(url);
+
+        //showAlert();
+    }
+
+
+    public void showAlert() {
+
+        final SharedPreferences sharedPreferences = this.getSharedPreferences("com.abhilash.abhi.recipedatabase", Context.MODE_PRIVATE);
+
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Save Recipe")
+                .setMessage("Do you want to save this recipe?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sharedPreferences.edit().putString("language", "english").apply();
+                        return;
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        return;
+                    }
+                })
+                .show();
+
     }
 
 
