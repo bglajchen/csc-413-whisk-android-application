@@ -7,6 +7,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -23,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         api_result = (TextView) findViewById(R.id.api_result);
 
         apiTask task = new apiTask();
-        task.execute("http://www.recipepuppy.com/api/?i=chocolate");
+        task.execute("http://www.recipepuppy.com/api/?i=asparagus");
     }
 
     /*@Override
@@ -63,8 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 int data = isReader.read();
 
                 while (data != -1) {
-                    char current = (char) data;
-                    result += current;
+                    result += (char) data;
                     data = isReader.read();
                 }
 
@@ -82,7 +85,21 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            api_result.setText(result);
+            try {
+                StringBuilder sb = new StringBuilder(100);
+                JSONObject json = new JSONObject(result);
+                JSONArray jArray = json.getJSONArray("results");
+
+                for (int i = 0; i < jArray.length(); i++) {
+                    sb.append(jArray.getJSONObject(i).getString("title"));
+                    sb.append("\n");
+                }
+
+                api_result.setText(sb.toString());
+
+            } catch (Exception e) {
+                e.getMessage();
+            }
         }
     }
 }
