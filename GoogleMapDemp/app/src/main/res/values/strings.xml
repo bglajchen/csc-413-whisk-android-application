@@ -4,4 +4,7 @@
     <string name="button_search">SEARCH</string>
     <string name="tfSearch">DemoMap</string>
     <string name="title_activity_content">ContentActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="next">next</string>
+    <string name="s_botton">SEARCH</string>
 </resources>

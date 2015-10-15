@@ -1,17 +1,24 @@
 package com.junt_t.googlemapdemp;
 
 import android.content.Intent;
+import android.content.IntentSender;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -19,62 +26,144 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.List;
 
-import static com.junt_t.googlemapdemp.R.id.TFaddress;
+public class MapsActivity extends FragmentActivity implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-    private GoogleMap mMap;
-    private EditText location_tf;
-    private String location;
+    private GoogleMap mMap;;
+    private GoogleApiClient mGoogleApiClient;
+    public static final String TAG = MapsActivity.class.getSimpleName();
+    private LocationRequest mLocationRequest;
+
+    /*
+     * Define a request code to send to Google Play services and return in Activity.onActivityResult
+     */
+    private final static int CONNECTION_FAILURE_REQUEST = 9000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        setUpMapIfNeeded();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mLocationRequest = mLocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
+                .setInterval(10 * 1000) //  10 second, in milliseconds
+                .setFastestInterval(1 * 1000); //    1 second, in milliseconds
     }
 
-    public void onSearch(View view) {
-        location_tf = ( EditText)findViewById(R.id.TFaddress);
-        location = location_tf.getText().toString();
+    public void clickButton(View view) {
+        EditText location_tf = (EditText) findViewById(R.id.TFaddress);
+        String locationString = location_tf.getText().toString();
         List<Address> addressList = null;
 
-        if(location != null || !location.equals("")) {
+        if (view.getId() == R.id.search_button) {
             Geocoder geocode = new Geocoder(this);
             try {
-               addressList = geocode.getFromLocationName(location, 1);
+                addressList = geocode.getFromLocationName(locationString, 1);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            Address address = addressList.get(0);
-
-            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(latLng).title(location));
+            LatLng latLng = new LatLng(addressList.get(0).getLatitude(), addressList.get(0).getLongitude());
+            mMap.addMarker(new MarkerOptions().position(latLng).title(locationString));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+        }
+
+        if (view.getId() == R.id.fab) {
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW);
+            mapIntent.setData(Uri.parse("google.navigation:q=" + Uri.encode(locationString)));
+            mapIntent.setPackage("com.google.android.apps.maps");
+            startActivity(mapIntent);
         }
     }
 
-    public void getDirection(View view) {
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW);
-        location_tf = ( EditText)findViewById(R.id.TFaddress);
-        location = location_tf.getText().toString();
-
-        mapIntent.setData(Uri.parse("google.navigation:q=" + Uri.encode(location)));
-        mapIntent.setPackage("com.google.android.apps.maps");
-        startActivity(mapIntent);
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.i(TAG, "Location services connected.");
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (location == null) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
+                    mLocationRequest, this);
+        } else {
+            handleNewLocation(location);
+        }
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+    public void onConnectionSuspended(int i) {
+        Log.i(TAG, "Location services suspened. Please reconnect.");
+    }
 
-        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setUpMapIfNeeded();
+        mGoogleApiClient.connect();
+    }
+
+    private void setUpMapIfNeeded() {
+        if (mMap == null) {
+            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+                    .getMap();
+        }
+        if (mMap != null) {
+            setUpMap();
+        }
+    }
+
+    private void setUpMap() {
+        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("New Location"));
         mMap.setMyLocationEnabled(true);
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        if (connectionResult.hasResolution()) {
+            try {
+                connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_REQUEST);
+            } catch (IntentSender.SendIntentException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Log.i(TAG, "Location services connection failed with code "
+                    + connectionResult.getErrorCode());
+        }
+    }
+
+    private void handleNewLocation(Location location) {
+        Log.d(TAG, location.toString());
+
+        double currentLatitude = location.getLatitude();
+        double currentLongtitude = location.getLongitude();
+        LatLng latlng = new LatLng(currentLatitude, currentLongtitude);
+
+        MarkerOptions options = new MarkerOptions()
+                .position(latlng)
+                .title("I am here");
+
+        mMap.addMarker(options);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, 10));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        handleNewLocation(location);
     }
 }
