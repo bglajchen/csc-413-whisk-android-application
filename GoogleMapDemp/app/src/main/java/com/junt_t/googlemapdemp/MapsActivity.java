@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -31,7 +33,9 @@ public class MapsActivity extends FragmentActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    private GoogleMap mMap;;
+    private GoogleMap mMap;
+    String locationString = null;
+    EditText location_tf = null;
     private GoogleApiClient mGoogleApiClient;
     public static final String TAG = MapsActivity.class.getSimpleName();
     private LocationRequest mLocationRequest;
@@ -52,6 +56,7 @@ public class MapsActivity extends FragmentActivity implements
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+
         mLocationRequest = mLocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
                 .setInterval(10 * 1000) //  10 second, in milliseconds
@@ -59,28 +64,45 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     public void clickButton(View view) {
-        EditText location_tf = (EditText) findViewById(R.id.TFaddress);
-        String locationString = location_tf.getText().toString();
+        location_tf = (EditText) findViewById(R.id.TFaddress);
+        locationString = location_tf.getText().toString();
         List<Address> addressList = null;
 
-        if (view.getId() == R.id.search_button) {
-            Geocoder geocode = new Geocoder(this);
-            try {
-                addressList = geocode.getFromLocationName(locationString, 1);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (!locationString.isEmpty()) {
+            if (view.getId() == R.id.search_button) {
+                locationString = location_tf.getText().toString();
+                Geocoder geocode = new Geocoder(this);
+                try {
+                    addressList = geocode.getFromLocationName(locationString, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                LatLng latLng = new LatLng(addressList.get(0).getLatitude(), addressList.get(0).getLongitude());
+                MarkerOptions marker = new MarkerOptions().position(latLng).title(locationString);
+                mMap.addMarker(marker);
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
             }
 
-            LatLng latLng = new LatLng(addressList.get(0).getLatitude(), addressList.get(0).getLongitude());
-            mMap.addMarker(new MarkerOptions().position(latLng).title(locationString));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-        }
+            if (view.getId() == R.id.fab) {
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW);
+                mapIntent.setData(Uri.parse("google.navigation:q=" + Uri.encode(locationString)));
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
+            }
 
-        if (view.getId() == R.id.fab) {
-            Intent mapIntent = new Intent(Intent.ACTION_VIEW);
-            mapIntent.setData(Uri.parse("google.navigation:q=" + Uri.encode(locationString)));
-            mapIntent.setPackage("com.google.android.apps.maps");
-            startActivity(mapIntent);
+        } else {
+            Button button = (Button) findViewById(R.id.search_button);
+
+            button.setOnClickListener(new View.OnClickListener() {
+                                          @Override
+                                          public void onClick(View v) {
+                                              Toast.makeText(getBaseContext(),
+                                                      "Address can't be empty.", Toast.LENGTH_LONG).show();
+                                          }
+                                      }
+            );
         }
     }
 
@@ -146,7 +168,7 @@ public class MapsActivity extends FragmentActivity implements
 
         MarkerOptions options = new MarkerOptions()
                 .position(latlng)
-                .title("I am here");
+                .title("You are here");
 
         mMap.addMarker(options);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, 10));
