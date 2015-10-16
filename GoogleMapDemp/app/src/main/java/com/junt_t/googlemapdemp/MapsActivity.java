@@ -24,6 +24,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.melnykov.fab.FloatingActionButton;
 
 import java.io.IOException;
 import java.util.List;
@@ -34,12 +35,14 @@ public class MapsActivity extends FragmentActivity implements
         LocationListener {
 
     private GoogleMap mMap;
-    String locationString = null;
-    EditText location_tf = null;
+
     private GoogleApiClient mGoogleApiClient;
-    public static final String TAG = MapsActivity.class.getSimpleName();
     private LocationRequest mLocationRequest;
 
+    public static final String TAG = MapsActivity.class.getSimpleName();
+
+    private static EditText location_tf = null;
+    private static String locationString;
     /*
      * Define a request code to send to Google Play services and return in Activity.onActivityResult
      */
@@ -68,9 +71,18 @@ public class MapsActivity extends FragmentActivity implements
         locationString = location_tf.getText().toString();
         List<Address> addressList = null;
 
-        if (!locationString.isEmpty()) {
-            if (view.getId() == R.id.search_button) {
-                locationString = location_tf.getText().toString();
+        if (view.getId() == R.id.search_button) {
+            if (locationString.matches("")) {
+                Button search_button = (Button) findViewById(R.id.search_button);
+                search_button.setOnClickListener(new View.OnClickListener() {
+                                                     @Override
+                                                     public void onClick(View v) {
+                                                         Toast.makeText(getBaseContext(),
+                                                                 "Address can't be empty.", Toast.LENGTH_LONG).show();
+                                                     }
+                                                 }
+                );
+            } else {
                 Geocoder geocode = new Geocoder(this);
                 try {
                     addressList = geocode.getFromLocationName(locationString, 1);
@@ -78,31 +90,30 @@ public class MapsActivity extends FragmentActivity implements
                     e.printStackTrace();
                 }
 
-
                 LatLng latLng = new LatLng(addressList.get(0).getLatitude(), addressList.get(0).getLongitude());
                 MarkerOptions marker = new MarkerOptions().position(latLng).title(locationString);
                 mMap.addMarker(marker);
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
             }
+        }
 
-            if (view.getId() == R.id.fab) {
+        if (view.getId() == R.id.fab) {
+            if (locationString.matches("")) {
+                FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+                fab.setOnClickListener(new View.OnClickListener() {
+                                           @Override
+                                           public void onClick(View v) {
+                                               Toast.makeText(getBaseContext(),
+                                                       "Address can't be empty.", Toast.LENGTH_LONG).show();
+                                           }
+                                       }
+                );
+            } else {
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW);
                 mapIntent.setData(Uri.parse("google.navigation:q=" + Uri.encode(locationString)));
                 mapIntent.setPackage("com.google.android.apps.maps");
                 startActivity(mapIntent);
             }
-
-        } else {
-            Button button = (Button) findViewById(R.id.search_button);
-
-            button.setOnClickListener(new View.OnClickListener() {
-                                          @Override
-                                          public void onClick(View v) {
-                                              Toast.makeText(getBaseContext(),
-                                                      "Address can't be empty.", Toast.LENGTH_LONG).show();
-                                          }
-                                      }
-            );
         }
     }
 
