@@ -6,42 +6,69 @@ package com.example.junt_t.mapdemo;
 
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.webkit.WebView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.stanfy.gsonxml.GsonXml;
-import com.stanfy.gsonxml.GsonXmlBuilder;
-import com.stanfy.gsonxml.XmlParserCreator;
+import org.xmlpull.v1.XmlPullParserException;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
-
-import java.util.ArrayList;
-
-import cz.msebera.android.httpclient.Header;
-
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.List;
 public class IngredientItem  extends Activity {
     String search = null;
     ListView produceListView;
-    ResponseSupermarketAPI responseObj;
-    GsonXml gsonXml;
-    String url;
+    //ResponseSupermarketAPI responseObj;
     AdapterProduct adapterProduct;
-    AsyncHttpClient client;
+   // AsyncHttpClient client;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_item_list);
-        Bundle bundle = getIntent().getExtras();
+        setContentView(R.layout.product_list);
+        InputStream stream = null;
 
         produceListView = (ListView) findViewById(R.id.product_list);
-        client = new AsyncHttpClient();
 
+        ProductXmlHandle productXmlHandler = new ProductXmlHandle();
+
+        List<ProductXmlHandle.Product> productsList = null;
+        String ItemName = null;
+        String ItemDescription = null;
+        String ItemCategory = null;
+        String ItemID = null;
+        String ItemImage = null;
+        String AisleNumber = null;
+
+        try {
+            stream = downloadUrl(obtainURL(search));
+            productsList = productXmlHandler.parse(stream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } finally {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        adapterProduct = new AdapterProduct(productsList, IngredientItem.this);
+        produceListView.setAdapter(adapterProduct);
+
+
+
+        /*
         final XmlParserCreator parserCreator = new XmlParserCreator() {
             @Override
             public XmlPullParser createParser() {
@@ -76,11 +103,32 @@ public class IngredientItem  extends Activity {
                 toast.show();
             }
         });
+        */
     }
 
     public String obtainURL( String productSearch)
     {
-        String URL = "http://www.SupermarketAPI.com/api.asmx/SearchByProductName?APIKEY=6471b24741&ItemName=2%25milk";
+        String URL = "http://www.SupermarketAPI.com/api.asmx/SearchByProductName?APIKEY=6471b24741&ItemName=apple";
         return URL;
+    }
+
+    // Given a string representation of a URL, sets up a connection and gets
+    // an input stream.
+    private InputStream downloadUrl(String urlString) throws IOException {
+        URL url = new URL(urlString);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        try {
+            conn.setReadTimeout(10000 /* milliseconds */);
+            conn.setConnectTimeout(15000 /* milliseconds */);
+            conn.setRequestMethod("GET");
+            conn.setDoInput(true);
+            // Starts the query
+           // conn.connect();
+            InputStream in = new BufferedInputStream(conn.getInputStream());
+            return in;
+        } finally {
+               conn.disconnect();
+        }
     }
 }

@@ -16,12 +16,11 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class AdapterProduct extends BaseAdapter
-{
-    private List<ResponseSupermarketAPI.ArrayOfProductEntity.ProductEntity> rItem;
+public class AdapterProduct extends BaseAdapter  {
+    private List<ProductXmlHandle.Product> rItem;
     private Context rContext;
 
-    public AdapterProduct(List<ResponseSupermarketAPI.ArrayOfProductEntity.ProductEntity> rItem, Context rContext)
+    public AdapterProduct(List<ProductXmlHandle.Product> rItem, Context rContext)
     {
         this.rItem = rItem;
         this.rContext = rContext;
@@ -55,13 +54,13 @@ public class AdapterProduct extends BaseAdapter
         LayoutInflater inflater = (LayoutInflater) rContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.activity_item_list, parent, false);
-        ResponseSupermarketAPI.ArrayOfProductEntity.ProductEntity item = (ResponseSupermarketAPI.ArrayOfProductEntity.ProductEntity) getItem(position);
+        ProductXmlHandle.Product item = (ProductXmlHandle.Product) getItem(position);
 
         ImageView thumbnail = (ImageView) rowView.findViewById(R.id.thumbnail);
         Picasso.with(rContext).load(item.getItemImage()).into(thumbnail);
 
         TextView title = (TextView) rowView.findViewById(R.id.title);
-        title.setText(item.getItemname());
+        title.setText(item.getItemName());
 
         TextView ingredients = (TextView) rowView.findViewById(R.id.ingredients);
         ingredients.setText(item.getItemDescription());
