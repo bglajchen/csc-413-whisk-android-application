@@ -1,31 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    tools:contect="IngredientItem">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <ImageView
-        android:id="@+id/thumbnail"
-        android:layout_width="125dp"
-        android:layout_height="150dp"
-        android:layout_below="@+id/title" />
+        android:id="@+id/iconImg"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginRight="8dp" />
 
     <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
+        android:id="@+id/nameTxt"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_toRightOf="@id/iconImg"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/ingredients"
-        android:layout_width="match_parent"
+        android:id="@+id/aboutTxt"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
-        android:layout_alignTop="@+id/thumbnail"
-        android:layout_toEndOf="@+id/thumbnail" />
+        android:layout_below="@id/nameTxt"
+        android:layout_toRightOf="@id/iconImg"
+        android:textSize="12sp" />
 
 </RelativeLayout>
