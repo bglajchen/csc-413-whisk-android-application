@@ -2910,11 +2910,11 @@ public class IngredientNutritionResponse
         }
 
         public static class ALCEntity {
-            private int value;
+            private double value;
             private String desc;
             private String uom;
 
-            public void setValue(int value) {
+            public void setValue(double value) {
                 this.value = value;
             }
 
@@ -2926,7 +2926,7 @@ public class IngredientNutritionResponse
                 this.uom = uom;
             }
 
-            public int getValue() {
+            public double getValue() {
                 return value;
             }
 
@@ -2970,11 +2970,11 @@ public class IngredientNutritionResponse
         }
 
         public static class CAFFNEntity {
-            private int value;
+            private double value;
             private String desc;
             private String uom;
 
-            public void setValue(int value) {
+            public void setValue(double value) {
                 this.value = value;
             }
 
@@ -2986,7 +2986,7 @@ public class IngredientNutritionResponse
                 this.uom = uom;
             }
 
-            public int getValue() {
+            public double getValue() {
                 return value;
             }
 
@@ -3000,11 +3000,11 @@ public class IngredientNutritionResponse
         }
 
         public static class THEBRNEntity {
-            private int value;
+            private double value;
             private String desc;
             private String uom;
 
-            public void setValue(int value) {
+            public void setValue(double value) {
                 this.value = value;
             }
 
@@ -3016,7 +3016,7 @@ public class IngredientNutritionResponse
                 this.uom = uom;
             }
 
-            public int getValue() {
+            public double getValue() {
                 return value;
             }
 
@@ -5010,11 +5010,11 @@ public class IngredientNutritionResponse
         }
 
         public static class HYPEntity {
-            private int value;
+            private double value;
             private String desc;
             private String uom;
 
-            public void setValue(int value) {
+            public void setValue(double value) {
                 this.value = value;
             }
 
@@ -5026,7 +5026,7 @@ public class IngredientNutritionResponse
                 this.uom = uom;
             }
 
-            public int getValue() {
+            public double getValue() {
                 return value;
             }
 
@@ -5640,11 +5640,11 @@ public class IngredientNutritionResponse
         }
 
         public static class F18D4Entity {
-            private int value;
+            private double value;
             private String desc;
             private String uom;
 
-            public void setValue(int value) {
+            public void setValue(double value) {
                 this.value = value;
             }
 
@@ -5656,7 +5656,7 @@ public class IngredientNutritionResponse
                 this.uom = uom;
             }
 
-            public int getValue() {
+            public double getValue() {
                 return value;
             }
 
@@ -6030,11 +6030,11 @@ public class IngredientNutritionResponse
         }
 
         public static class F22D1TEntity {
-            private int value;
+            private double value;
             private String desc;
             private String uom;
 
-            public void setValue(int value) {
+            public void setValue(double value) {
                 this.value = value;
             }
 
@@ -6046,7 +6046,7 @@ public class IngredientNutritionResponse
                 this.uom = uom;
             }
 
-            public int getValue() {
+            public double getValue() {
                 return value;
             }
 
@@ -6420,11 +6420,11 @@ public class IngredientNutritionResponse
         }
 
         public static class F13D0Entity {
-            private int value;
+            private double value;
             private String desc;
             private String uom;
 
-            public void setValue(int value) {
+            public void setValue(double value) {
                 this.value = value;
             }
 
@@ -6436,7 +6436,7 @@ public class IngredientNutritionResponse
                 this.uom = uom;
             }
 
-            public int getValue() {
+            public double getValue() {
                 return value;
             }
 
@@ -6450,11 +6450,11 @@ public class IngredientNutritionResponse
         }
 
         public static class F15D1Entity {
-            private int value;
+            private double value;
             private String desc;
             private String uom;
 
-            public void setValue(int value) {
+            public void setValue(double value) {
                 this.value = value;
             }
 
@@ -6466,7 +6466,7 @@ public class IngredientNutritionResponse
                 this.uom = uom;
             }
 
-            public int getValue() {
+            public double getValue() {
                 return value;
             }
 

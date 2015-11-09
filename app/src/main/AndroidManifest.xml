@@ -20,7 +20,7 @@
         </activity>
         <activity
             android:name=".Filter"
-            android:label="Filter"
+            android:label="Whisk"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".Recipe"
@@ -33,6 +33,10 @@
         <activity
             android:name=".OutputNutrition"
             android:label="@string/title_activity_nutrition_output" >
+        </activity>
+        <activity
+            android:name=".URLView"
+            android:label="Recipe" >
         </activity>
     </application>
 

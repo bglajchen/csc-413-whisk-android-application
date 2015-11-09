@@ -32,18 +32,15 @@ public class OutputNutrition extends AppCompatActivity {
         setContentView(R.layout.activity_nutrition_output);
         Bundle bundle = getIntent().getExtras();
 
-        if (bundle != null)
-        {
+        if (bundle != null) {
             itemID = bundle.getString("itemID");
         }
 
         client = new AsyncHttpClient();
 
-        client.get(OutputNutrition.this, obtainURL(itemID), new AsyncHttpResponseHandler()
-        {
+        client.get(OutputNutrition.this, obtainURL(itemID), new AsyncHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody)
-            {
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String responseStr = new String(responseBody);
                 gson = new Gson();
                 responseObj = gson.fromJson(responseStr, IngredientNutritionResponse.class);
@@ -54,8 +51,7 @@ public class OutputNutrition extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error)
-            {
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 Toast toast = Toast.makeText(OutputNutrition.this, "Error, could not resolve URL", Toast.LENGTH_LONG);
                 toast.show();
             }
@@ -84,42 +80,71 @@ public class OutputNutrition extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public String obtainURL(String itemID)
-    {
-        url = "https://api.nutritionix.com/v1_1/item?id="+itemID+"&appId=16de0c54&appKey=e87e735d38bbcb5732adbd79dea587dc";
+    public String obtainURL(String itemID) {
+        url = "https://api.nutritionix.com/v1_1/item?id=" + itemID + "&appId=16de0c54&appKey=e87e735d38bbcb5732adbd79dea587dc";
         return url;
     }
 
-    public void setView(IngredientNutritionResponse responseObj)
-    {
+    public void setView(IngredientNutritionResponse responseObj) {
         TextView title = (TextView) findViewById(R.id.NutritionTitle);
         title.setText(responseObj.getItem_name());
 
         IngredientNutritionResponse item = responseObj;
 
         TextView fat = (TextView) findViewById(R.id.fat);
-        fat.setText(item.getNf_total_fat()+"g");
+        try {
+            fat.setText(item.getNf_total_fat() + "g");
+        } catch (NullPointerException e) {
+            fat.setText("N/A");
+        }
 
         TextView sugar = (TextView) findViewById(R.id.sugar);
-        sugar.setText(item.getNf_sugars()+"g");
+        try {
+            sugar.setText(item.getNf_sugars() + "g");
+        } catch (NullPointerException e) {
+            sugar.setText("N/A");
+        }
 
         TextView protein = (TextView) findViewById(R.id.protein);
-        protein.setText(item.getNf_protein()+"g");
+        try {
+            protein.setText(item.getNf_protein() + "g");
+        } catch (NullPointerException e) {
+            protein.setText("N/A");
+        }
 
         TextView cholest = (TextView) findViewById(R.id.cholesterol);
-        cholest.setText(item.getNf_cholesterol()+"mg");
+        try {
+            cholest.setText(item.getNf_cholesterol() + "mg");
+        } catch (NullPointerException e) {
+            cholest.setText("N/A");
+        }
 
         TextView sodium = (TextView) findViewById(R.id.sodium);
-        sodium.setText(item.getNf_sodium()+"mg");
+        try {
+            sodium.setText(item.getNf_sodium() + "mg");
+        } catch (NullPointerException e) {
+            sodium.setText("N/A");
+        }
 
         TextView calcium = (TextView) findViewById(R.id.calcium);
-        calcium.setText(item.getNf_calcium_dv()+"%");
+        try {
+            calcium.setText(item.getNf_calcium_dv() + "%");
+        } catch (NullPointerException e) {
+            calcium.setText("N/A");
+        }
 
         TextView vitA = (TextView) findViewById(R.id.vitA);
-        vitA.setText(item.getNf_vitamin_a_dv()+"%");
+        try {
+            vitA.setText(item.getNf_vitamin_a_dv() + "%");
+        } catch (NullPointerException e) {
+            vitA.setText("N/A");
+        }
 
         TextView vitC = (TextView) findViewById(R.id.vitC);
-        vitC.setText(item.getNf_vitamin_c_dv()+"%");
-
+        try {
+            vitC.setText(item.getNf_vitamin_c_dv() + "%");
+        } catch (NullPointerException e) {
+            vitC.setText("N/A");
+        }
     }
 }

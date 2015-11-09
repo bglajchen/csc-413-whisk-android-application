@@ -30,6 +30,7 @@ public class Filter extends Activity {
     RecipeAdapter adapter;
     Gson gson;
     AsyncHttpClient client;
+    String recipeURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,7 @@ public class Filter extends Activity {
                         new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
-                                Intent intent = new Intent(Filter.this, Recipe.class);
+                                Intent intent = new Intent(Filter.this, URLView.class);
                                 EdamamResponse.HitsEntity.RecipeEntity recipe = responseObj.getHits().get(position).getRecipe();
                                 foodText.clear();
                                 for (int i = 0; i < recipe.getIngredients().size(); i++) {
@@ -68,9 +69,11 @@ public class Filter extends Activity {
                                     foodText.add((String) recipe.getIngredients().get(i).getText());
                                 }
                                 recipeName = recipe.getLabel();
+                                recipeURL = recipe.getUrl();
                                 intent.putExtra("recipeIngredientText", foodText);
                                 intent.putExtra("recipeIngredient", food);
                                 intent.putExtra("recipeName", recipeName);
+                                intent.putExtra("recipeURL", recipeURL);
                                 //intent.putExtra("recipeNutrition", obtainNutrition(recipe));
                                 startActivity(intent);
                             }
@@ -96,26 +99,4 @@ public class Filter extends Activity {
 
         return URL;
     }
-
-
-
-    public ArrayList<String> obtainNutrition(EdamamResponse.HitsEntity.RecipeEntity recipe)
-    {
-        ArrayList<String> recipeNutrition = new ArrayList<String>();
-
-        EdamamResponse.HitsEntity.RecipeEntity.TotalNutrientsEntity nutrition = recipe.getTotalNutrients();
-
-        recipeNutrition.add(nutrition.getFAT().getQuantity()+nutrition.getFAT().getUnit());
-        recipeNutrition.add(nutrition.getSUGAR().getQuantity()+nutrition.getSUGAR().getUnit());
-        recipeNutrition.add(nutrition.getPROCNT().getQuantity()+nutrition.getPROCNT().getUnit());
-        recipeNutrition.add(nutrition.getCHOLE().getQuantity()+nutrition.getCHOLE().getUnit());
-        recipeNutrition.add(nutrition.getNA().getQuantity()+nutrition.getNA().getUnit());
-        recipeNutrition.add(nutrition.getCA().getQuantity()+nutrition.getCA().getUnit());
-        recipeNutrition.add(nutrition.getK().getQuantity()+nutrition.getK().getUnit());
-        recipeNutrition.add(nutrition.getFE().getQuantity()+nutrition.getFE().getUnit());
-
-        return recipeNutrition;
-    }
-
-
 }

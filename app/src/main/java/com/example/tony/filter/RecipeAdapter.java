@@ -69,14 +69,41 @@ public class RecipeAdapter extends BaseAdapter
 
         EdamamResponse.HitsEntity.RecipeEntity.TotalNutrientsEntity nutrition = recipe.getTotalNutrients();
 
-        recipeNutrition.add("Fat: " + df.format(nutrition.getFAT().getQuantity()) + nutrition.getFAT().getUnit() + "\n");
-        recipeNutrition.add("Sugar: " + df.format(nutrition.getSUGAR().getQuantity()) + nutrition.getSUGAR().getUnit() + "\n");
-        recipeNutrition.add("Protein: " + df.format(nutrition.getPROCNT().getQuantity()) + nutrition.getPROCNT().getUnit() + "\n");
-        recipeNutrition.add("Cholesterol: " + df.format(nutrition.getCHOLE().getQuantity()) + nutrition.getCHOLE().getUnit() + "\n");
-        recipeNutrition.add("Sodium: " + df.format(nutrition.getNA().getQuantity()) + nutrition.getNA().getUnit() + "\n");
-        recipeNutrition.add("Calcium: " + df.format(nutrition.getCA().getQuantity()) + nutrition.getCA().getUnit() + "\n");
-        recipeNutrition.add("Vitamin A: " + df.format(recipe.getTotalDaily().getVITA_RAE().getQuantity()) + recipe.getTotalDaily().getVITA_RAE().getUnit() + "\n");
-        recipeNutrition.add("Vitamin C: " + df.format(recipe.getTotalDaily().getVITC().getQuantity()) + recipe.getTotalDaily().getVITC().getUnit());
+        try {
+            recipeNutrition.add("Calories: " + df.format(nutrition.getENERC_KCAL().getQuantity()) + "Cal\n");
+        }   catch(NullPointerException e){}
+
+        try {
+            recipeNutrition.add("Fat: " + df.format(nutrition.getFAT().getQuantity()) + nutrition.getFAT().getUnit() + "\n");
+        }   catch(NullPointerException e){}
+
+        try {
+            recipeNutrition.add("Sugar: " + df.format(nutrition.getSUGAR().getQuantity()) + nutrition.getSUGAR().getUnit() + "\n");
+        }   catch(NullPointerException e){}
+
+        try {
+            recipeNutrition.add("Protein: " + df.format(nutrition.getPROCNT().getQuantity()) + nutrition.getPROCNT().getUnit() + "\n");
+        }   catch(NullPointerException e){}
+
+        try {
+            recipeNutrition.add("Cholesterol: " + df.format(nutrition.getCHOLE().getQuantity()) + nutrition.getCHOLE().getUnit() + "\n");
+        }   catch(NullPointerException e){}
+
+        try {
+            recipeNutrition.add("Sodium: " + df.format(nutrition.getNA().getQuantity()) + nutrition.getNA().getUnit() + "\n");
+        }   catch(NullPointerException e){}
+
+        try {
+            recipeNutrition.add("Calcium: " + df.format(nutrition.getCA().getQuantity()) + nutrition.getCA().getUnit() + "\n");
+        }   catch(NullPointerException e){}
+
+        try {
+            recipeNutrition.add("Vitamin A: " + df.format(recipe.getTotalDaily().getVITA_RAE().getQuantity()) + recipe.getTotalDaily().getVITA_RAE().getUnit() + "\n");
+        }   catch(NullPointerException e){}
+
+        try {
+            recipeNutrition.add("Vitamin C: " + df.format(recipe.getTotalDaily().getVITC().getQuantity()) + recipe.getTotalDaily().getVITC().getUnit());
+        }   catch(NullPointerException e){}
 
         return recipeNutrition;
     }
