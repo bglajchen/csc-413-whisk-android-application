@@ -30,10 +30,7 @@ public class Filter extends Activity {
     RecipeAdapter adapter;
     Gson gson;
     AsyncHttpClient client;
-<<<<<<< HEAD
     String recipeURL;
-=======
->>>>>>> 270ea977fcb027b173bb06153925d5d8fd37dbf7
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,11 +59,7 @@ public class Filter extends Activity {
                         new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
-<<<<<<< HEAD
                                 Intent intent = new Intent(Filter.this, URLView.class);
-=======
-                                Intent intent = new Intent(Filter.this, Recipe.class);
->>>>>>> 270ea977fcb027b173bb06153925d5d8fd37dbf7
                                 EdamamResponse.HitsEntity.RecipeEntity recipe = responseObj.getHits().get(position).getRecipe();
                                 foodText.clear();
                                 for (int i = 0; i < recipe.getIngredients().size(); i++) {
@@ -76,17 +69,11 @@ public class Filter extends Activity {
                                     foodText.add((String) recipe.getIngredients().get(i).getText());
                                 }
                                 recipeName = recipe.getLabel();
-<<<<<<< HEAD
                                 recipeURL = recipe.getUrl();
                                 intent.putExtra("recipeIngredientText", foodText);
                                 intent.putExtra("recipeIngredient", food);
                                 intent.putExtra("recipeName", recipeName);
                                 intent.putExtra("recipeURL", recipeURL);
-=======
-                                intent.putExtra("recipeIngredientText", foodText);
-                                intent.putExtra("recipeIngredient", food);
-                                intent.putExtra("recipeName", recipeName);
->>>>>>> 270ea977fcb027b173bb06153925d5d8fd37dbf7
                                 //intent.putExtra("recipeNutrition", obtainNutrition(recipe));
                                 startActivity(intent);
                             }
