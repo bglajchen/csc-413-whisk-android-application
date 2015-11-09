@@ -87,16 +87,25 @@
         android:onClick="selectItem"
         />
 
+<<<<<<< HEAD
     <ImageButton
+=======
+    <Button
+>>>>>>> 270ea977fcb027b173bb06153925d5d8fd37dbf7
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Results"
         android:id="@+id/button"
         android:onClick="onSubmit"
+<<<<<<< HEAD
         android:src="@drawable/whisk_button"
         android:background="@null"
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/carb"
+=======
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/textView"
+>>>>>>> 270ea977fcb027b173bb06153925d5d8fd37dbf7
         />
 
     <TextView
