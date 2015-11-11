@@ -7,18 +7,21 @@ package com.example.junt_t.mapdemo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.io.FileNotFoundException;
 
 public class ProductActivity extends Activity {
     String searchProduct = "orange juice";
-    String searchStoreID = null;
+    String searchStoreID = "e6k3fjw75k";
     ListView produceListView;
     //ResponseSupermarketAPI responseObj;
     ProductAdapter productAdapter;
@@ -35,7 +38,28 @@ public class ProductActivity extends Activity {
         /**
          * Set the click listener to launch the browser when a row is clicked.
          */
+        produceListView.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    /**
+                     * Callback method to be invoked when an item in this AdapterView has
+                     * been clicked.
+                     * <p/>
+                     * Implementers can call getItemAtPosition(position) if they need
+                     * to access the data associated with the selected item.
+                     *
+                     * @param parent   The AdapterView where the click happened.
+                     * @param view     The view within the AdapterView that was clicked (this
+                     *                 will be a view provided by the adapter)
+                     * @param position The position of the view in the adapter.
+                     * @param id       The row id of the item that was clicked.
+                     */
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent intent = new Intent(ProductActivity.this, MapsActivity.class);
 
+                    }
+
+                });
 
 
         /*
@@ -45,7 +69,7 @@ public class ProductActivity extends Activity {
         if (isNetworkAvailable()) {
             Log.i("StackSites", "starting download Task");
             DownloadTask download = new DownloadTask();
-            download.execute();
+            download.execute(obtainURL(searchProduct, searchStoreID));
         }else{
             productAdapter = new ProductAdapter(ProductActivity.this, -1, ProductXmlPullParser.getListFromFile(ProductActivity.this));
             produceListView.setAdapter(productAdapter);
@@ -64,13 +88,13 @@ public class ProductActivity extends Activity {
 	 * AsyncTask that will download the xml file for us and store it locally.
 	 * After the download is done we'll parse the local file.
 	 */
-    private class DownloadTask extends AsyncTask<Void, Void, Void> {
+    private class DownloadTask extends AsyncTask<String, Void, Void> {
 
         @Override
-        protected Void doInBackground(Void... arg0) {
+        protected Void doInBackground(String... arg) {
             //Download the file
             try {
-                Downloader.DownloadFromUrl(obtainURL(searchProduct), openFileOutput("SearchByProductName.xml", Context.MODE_PRIVATE));
+                Downloader.DownloadFromUrl(arg[0], openFileOutput("COMMERCIAL_SearchForItem.xml", Context.MODE_PRIVATE));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -89,8 +113,10 @@ public class ProductActivity extends Activity {
         }
     }
 
-    public String obtainURL(String search) {
-        String URL = "http://www.SupermarketAPI.com/api.asmx/SearchByProductName?APIKEY=6471b24741&ItemName=orange%20juice";
+    public String obtainURL(String searchItem, String searchStoreId) {
+        String replacedItem = searchItem.replace(" ", "%20");
+
+        String URL = "http://www.supermarketapi.com/api.asmx/COMMERCIAL_SearchForItem?APIKEY=6471b24741&StoreId=" + searchStoreId + "&ItemName=" + replacedItem;
         return URL;
     }
 }

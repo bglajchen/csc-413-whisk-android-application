@@ -13,13 +13,14 @@ import java.util.List;
 
 public class ProductXmlPullParser {
     
-    static final String KEY_PRODUCT = "Product";
+    static final String KEY_PRODUCT = "Product_Commercial";
     static final String KEY_ITEMNAME = "Itemname";
     static final String KEY_ITEMDESCRIPTION = "ItemDescription";
     static final String KEY_ITEMCATEGORY = "ItemCategory";
     static final String KEY_ITEMID = "ItemID";
     static final String KEY_IMAGE_URL = "ItemImage";
     static final String KEY_AISLENUMBER = "AisleNumber";
+    static final String KEY_PRICING = "Pricing";
 
     public static List<Product> getListFromFile(Context ctx) {
 
@@ -38,7 +39,7 @@ public class ProductXmlPullParser {
             XmlPullParser xpp = factory.newPullParser();
 
             // Open up InputStream and Reader of our file.
-            FileInputStream fis = ctx.openFileInput("SearchByProductName.xml");
+            FileInputStream fis = ctx.openFileInput("COMMERCIAL_SearchForItem.xml");
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
             // point the parser to our file.
@@ -92,6 +93,8 @@ public class ProductXmlPullParser {
                         } else if (tagName.equals(KEY_AISLENUMBER)) {
                             // if </AisleNumber> use setAisleNumber() on curProduct
                             curProduct.setAisleNumber(curText);
+                        } else if (tagName.equals(KEY_PRICING)) {
+                            curProduct.setPricing(curText);
                         }
                         break;
                     default:

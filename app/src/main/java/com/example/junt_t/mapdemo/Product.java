@@ -10,6 +10,7 @@ public class Product {
     private String ItemID = null;
     private String ItemImage = null;
     private String AisleNumber = null;
+    private String Pricing = null;
 
     public void setItemName(String ItemName) {
         this.ItemName = ItemName;
@@ -32,10 +33,13 @@ public class Product {
         this.ItemImage = ItemImage;
     }
 
-    public  void setAisleNumber(String AisleNumber) {
+    public void setAisleNumber(String AisleNumber) {
         this.AisleNumber = AisleNumber;
     }
 
+    public  void setPricing(String Pricing) {
+        this.Pricing = Pricing;
+    }
     public String getItemName() {
         return ItemName;
     }
@@ -58,5 +62,9 @@ public class Product {
 
     public String getAisleNumber() {
         return AisleNumber;
+    }
+
+    public String getPricing() {
+        return Pricing;
     }
 }
