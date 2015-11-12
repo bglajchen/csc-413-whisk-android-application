@@ -59,6 +59,8 @@ public class IngredientNutritionView extends AppCompatActivity {
             recipeURL = bundle.getString("recipeURL");
         }
 
+        setTitle(recipeName);
+
         client = new AsyncHttpClient();
 
         for (int i = 0; i < ingredientID.size(); i++) {
