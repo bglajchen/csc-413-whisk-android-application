@@ -5,108 +5,75 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
-import java.lang.reflect.Array;
-import java.net.URL;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
-public class URLView extends AppCompatActivity {
-
-    WebView webView;
+public class IngredientSearch extends AppCompatActivity {
     ArrayList<String> ingredient;
     ArrayList<String> ingredientText;
     ArrayList<String> nutrition;
-    ArrayList<String> ingredientID;
-    ArrayList<String> ingredientName;
-    IngredientSearchResponse responseObj;
+    ArrayList<String> ingredientID = new ArrayList<String>();
+    ArrayList<String> ingredientName= new ArrayList<String>();
+    ArrayList<IngredientSearchResponse> responseObj = new ArrayList<IngredientSearchResponse>();
     String recipeName;
-    String recipeURL;
     String url;
-    int count = 0;
+    IngredientSearchAdapter adapter;
     Gson gson;
     AsyncHttpClient client;
-    IngredientSearchAdapter adapter;
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search);
         Bundle bundle = getIntent().getExtras();
 
-        if (bundle != null)
-        {
+        if (bundle != null) {
             recipeName = bundle.getString("recipeName");
-            recipeURL = bundle.getString("recipeURL");
             ingredient = bundle.getStringArrayList("recipeIngredient");
             ingredientText = bundle.getStringArrayList("recipeIngredientText");
             nutrition = bundle.getStringArrayList("recipeNutrition");
         }
 
-        setTitle(recipeName);
-        setContentView(R.layout.activity_web_view);
-        webView = (WebView) findViewById(R.id.webview);
-        webView.setWebViewClient(new WebViewClient());
-        webView.getSettings().setBuiltInZoomControls(true);
-        webView.getSettings().setDisplayZoomControls(false);
-        webView.loadUrl(recipeURL);
-    }
-
-    public void onIngredientClick(View view)
-    {
-        ingredientID = new ArrayList<String>();
-        ingredientName = new ArrayList<String>();
-
         client = new AsyncHttpClient();
 
         for (int i = 0; i < ingredient.size(); i++)
         {
-            client.get(URLView.this, obtainURL(ingredient.get(i)), new AsyncHttpResponseHandler() {
+            client.get(IngredientSearch.this, obtainURL(ingredient.get(i)), new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     String responseStr = new String(responseBody);
                     gson = new Gson();
-                    responseObj = gson.fromJson(responseStr, IngredientSearchResponse.class);
-                    ingredientName.add(responseObj.getHits().get(0).getFields().getItem_name());
-                    ingredientID.add(responseObj.getHits().get(0).getFields().getItem_id());
-
-                    if (count == (ingredient.size() - 1) )
+                    responseObj.add(gson.fromJson(responseStr, IngredientSearchResponse.class));
+                    for (int i = 0; i < ingredient.size(); i++)
                     {
-                        System.out.println("itemID = " + ingredientID.toString());
-                        Intent intent = new Intent(URLView.this, IngredientNutritionView.class);
-                        intent.putExtra("recipeIngredient", ingredient);
-                        intent.putExtra("recipeNutrition", nutrition);
-                        intent.putExtra("ingredientName", ingredientName);
-                        intent.putExtra("ingredientID", ingredientID);
-                        intent.putExtra("ingredientText", ingredientText);
-                        intent.putExtra("recipeURL", recipeURL);
-                        intent.putExtra("recipeName", recipeName);
-                        startActivity(intent);
+                        ingredientName.add(responseObj.get(i).getHits().get(1).getFields().getItem_name());
+                        ingredientID.add(responseObj.get(i).getHits().get(1).getFields().getItem_id());
                     }
-                    count++;
+                        startActivity();
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                    Toast toast = Toast.makeText(URLView.this, "Error, could not resolve URL", Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(IngredientSearch.this, "Error, could not resolve URL", Toast.LENGTH_LONG);
                     toast.show();
                 }
             });
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_web_view, menu);
+        getMenuInflater().inflate(R.menu.menu_ingredient_nutrition_view, menu);
         return true;
     }
 
@@ -124,12 +91,16 @@ public class URLView extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
+    public void startActivity()
+    {
+        Intent intent = new Intent(IngredientSearch.this, IngredientNutritionView.class);
+        intent.putExtra("ingredientName", ingredientName);
+        intent.putExtra("ingredientID", ingredientID);
+        startActivity(intent);
+    }
     public String obtainURL(String ingredient)
     {
         url = "https://api.nutritionix.com/v1_1/search/"+ingredient+"?results=0%3A20&cal_min=0&cal_max=50000&fields=item_name%2Cbrand_name%2Citem_id%2Cbrand_id&appId=c313890c&appKey=6cc65ba8dd9a804c54666bf70cf9a6a1";
         return url;
     }
-
 }

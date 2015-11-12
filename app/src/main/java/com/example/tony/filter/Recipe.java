@@ -47,7 +47,7 @@ public class Recipe extends ListActivity {
                     @Override
                     public void onItemClick(AdapterView<?> arg0, View view, int position, long id)
                     {
-                        Intent intent = new Intent(Recipe.this, SearchNutrition.class);
+                        Intent intent = new Intent(Recipe.this, SearchIngredient.class);
                         String food = ingredient.get(position);
                         intent.putExtra("food", food);
                         startActivity(intent);

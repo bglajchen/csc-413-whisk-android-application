@@ -70,7 +70,11 @@ public class RecipeAdapter extends BaseAdapter
         EdamamResponse.HitsEntity.RecipeEntity.TotalNutrientsEntity nutrition = recipe.getTotalNutrients();
 
         try {
-            recipeNutrition.add("Calories: " + df.format(nutrition.getENERC_KCAL().getQuantity()) + "Cal\n");
+            recipeNutrition.add("Servings: About " + recipe.getYield() + "\n");
+        }   catch(NullPointerException e){}
+
+        try {
+            recipeNutrition.add("Calories: " + df.format((nutrition.getENERC_KCAL().getQuantity())/(recipe.getYield())) + "Cal\n");
         }   catch(NullPointerException e){}
 
         try {

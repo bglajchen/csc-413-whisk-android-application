@@ -23,8 +23,8 @@ public class Filter extends Activity {
     String recipeName;
     ListView listView;
     ArrayList<String> param = new ArrayList<>();
-    ArrayList<String> food = new ArrayList<String>();
-    ArrayList<String> foodText = new ArrayList<String>();
+    ArrayList<String> recipeIngredient = new ArrayList<String>();
+    ArrayList<String> recipeIngredientText = new ArrayList<String>();
     EdamamResponse responseObj;
     String url;
     RecipeAdapter adapter;
@@ -61,17 +61,18 @@ public class Filter extends Activity {
                             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
                                 Intent intent = new Intent(Filter.this, URLView.class);
                                 EdamamResponse.HitsEntity.RecipeEntity recipe = responseObj.getHits().get(position).getRecipe();
-                                foodText.clear();
+                                recipeIngredientText.clear();
+                                recipeIngredient.clear();
                                 for (int i = 0; i < recipe.getIngredients().size(); i++) {
-                                    food.add((String) recipe.getIngredients().get(i).getFood());
+                                    recipeIngredient.add(recipe.getIngredients().get(i).getFood());
                                 }
                                 for (int i = 0; i < recipe.getIngredients().size(); i++) {
-                                    foodText.add((String) recipe.getIngredients().get(i).getText());
+                                    recipeIngredientText.add(recipe.getIngredients().get(i).getText());
                                 }
                                 recipeName = recipe.getLabel();
                                 recipeURL = recipe.getUrl();
-                                intent.putExtra("recipeIngredientText", foodText);
-                                intent.putExtra("recipeIngredient", food);
+                                intent.putExtra("recipeIngredientText", recipeIngredientText);
+                                intent.putExtra("recipeIngredient", recipeIngredient);
                                 intent.putExtra("recipeName", recipeName);
                                 intent.putExtra("recipeURL", recipeURL);
                                 //intent.putExtra("recipeNutrition", obtainNutrition(recipe));

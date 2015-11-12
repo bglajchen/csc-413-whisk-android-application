@@ -9,4 +9,5 @@
     <string name="title_activity_recipe">Recipe</string>
     <string name="title_activity_nutrition">Nutrition</string>
     <string name="title_activity_nutrition_output">NutritionOutput</string>
+    <string name="title_activity_ingredient_nutrition_view">IngredientNutritionView</string>
 </resources>

@@ -15,9 +15,20 @@
         android:id="@+id/ingredients"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:text="Ingredients"
+        android:text="Nutrition"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right|bottom"
         android:onClick="onIngredientClick"/>
+
+    <Button
+        android:id="@+id/shopping"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="Shopping"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|bottom"
+        />
+
 </FrameLayout>

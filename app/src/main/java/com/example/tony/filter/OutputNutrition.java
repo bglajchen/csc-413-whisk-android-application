@@ -37,14 +37,14 @@ public class OutputNutrition extends AppCompatActivity {
         }
 
         client = new AsyncHttpClient();
-
+        System.out.println("ITEM ID " + itemID);
         client.get(OutputNutrition.this, obtainURL(itemID), new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String responseStr = new String(responseBody);
                 gson = new Gson();
                 responseObj = gson.fromJson(responseStr, IngredientNutritionResponse.class);
-                /*adapter = new IngredientSearchAdapter(responseObj.getHits(), SearchNutrition.this);*/
+                /*adapter = new IngredientSearchAdapter(responseObj.getHits(), SearchIngredient.this);*/
               /*  listView.setAdapter(adapter);*/
                /* ListView foodSearch = (ListView) findViewById(R.id.);*/
                 setView(responseObj);
@@ -81,7 +81,7 @@ public class OutputNutrition extends AppCompatActivity {
     }
 
     public String obtainURL(String itemID) {
-        url = "https://api.nutritionix.com/v1_1/item?id=" + itemID + "&appId=16de0c54&appKey=e87e735d38bbcb5732adbd79dea587dc";
+        url = "https://api.nutritionix.com/v1_1/item?id=" + itemID + "&appId=c313890c&appKey=6cc65ba8dd9a804c54666bf70cf9a6a1";
         return url;
     }
 

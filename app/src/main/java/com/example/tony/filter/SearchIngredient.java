@@ -16,7 +16,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import cz.msebera.android.httpclient.Header;
 
-public class SearchNutrition extends AppCompatActivity {
+public class SearchIngredient extends AppCompatActivity {
 
     String food;
     ListView listView;
@@ -40,13 +40,13 @@ public class SearchNutrition extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.food);
         client = new AsyncHttpClient();
 
-        client.get(SearchNutrition.this, obtainURL(food), new AsyncHttpResponseHandler() {
+        client.get(SearchIngredient.this, obtainURL(food), new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String responseStr = new String(responseBody);
                 gson = new Gson();
                 responseObj = gson.fromJson(responseStr, IngredientSearchResponse.class);
-                adapter = new IngredientSearchAdapter(responseObj.getHits(), SearchNutrition.this);
+                adapter = new IngredientSearchAdapter(responseObj.getHits(), SearchIngredient.this);
                 listView.setAdapter(adapter);
                /* ListView foodSearch = (ListView) findViewById(R.id.);*/
 
@@ -54,7 +54,7 @@ public class SearchNutrition extends AppCompatActivity {
                         new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
-                                Intent intent = new Intent(SearchNutrition.this, OutputNutrition.class);
+                                Intent intent = new Intent(SearchIngredient.this, OutputNutrition.class);
                                 intent.putExtra("itemID", responseObj.getHits().get(position).getFields().getItem_id());;
                                 startActivity(intent);
                             }
@@ -64,7 +64,7 @@ public class SearchNutrition extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Toast toast = Toast.makeText(SearchNutrition.this, "Error, could not resolve URL", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(SearchIngredient.this, "Error, could not resolve URL", Toast.LENGTH_LONG);
                 toast.show();
             }
         });
