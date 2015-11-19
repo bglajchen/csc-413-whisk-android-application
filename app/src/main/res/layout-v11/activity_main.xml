@@ -1,0 +1,78 @@
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
+    android:id="@+id/Timer"
+    >
+
+    <TextView
+        android:layout_width="350dp"
+        android:layout_height="150dp"
+        android:textSize="60dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/time_text"
+        android:id="@+id/timeText"
+        android:gravity="center"
+        android:layout_x="-10dp"
+        android:layout_y="110dp" />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:id="@+id/stopRing"
+        android:background="@drawable/bell"
+        android:layout_x="70dp"
+        android:layout_y="100dp" />
+
+    <NumberPicker
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/numberPickerMIN"
+        android:layout_x="129dp"
+        android:layout_y="88dp" />
+
+    <NumberPicker
+        android:layout_width="95dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/numberPickerHR"
+        android:layout_x="34dp"
+        android:layout_y="88dp" />
+
+    <NumberPicker
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/numberPickerSEC"
+        android:layout_marginTop="58dp"
+        android:layout_x="209dp"
+        android:layout_y="88dp" />
+
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="65dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text=">> Start >>"
+        android:textSize="40dp"
+        android:id="@+id/textStart"
+        android:gravity="center"
+        android:layout_marginBottom="39dp"
+        android:layout_x="12dp"
+        android:layout_y="422dp" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        android:progressDrawable="@drawable/circular_progress_bar"
+        android:background="@drawable/circle_shape"
+        android:max="100"
+        android:progress="65"
+        android:indeterminate="false"
+        android:id="@+id/progressBar"
+        android:layout_marginBottom="75dp"
+        android:layout_x="6dp"
+        android:layout_y="25dp" />
+
+
+</AbsoluteLayout>

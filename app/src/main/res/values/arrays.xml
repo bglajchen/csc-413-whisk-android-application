@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="Favourites">
+        <item name="5">5 mins</item>
+        <item name="10">10 mins</item>
+        <item name="15">15 mins</item>
+        <item name="20">20 mins</item>
+    </string-array>
+    <string-array name="FavouritesValue">
+        <item name="5">5</item>
+        <item name="10">10</item>
+        <item name="15">15</item>
+        <item name="20">20</item>
+    </string-array>
+
+</resources>
