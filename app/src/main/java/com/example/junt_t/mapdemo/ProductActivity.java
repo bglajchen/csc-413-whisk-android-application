@@ -18,27 +18,49 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class ProductActivity extends Activity {
-    String searchProduct = "orange juice";
-    String searchStoreID = "e6k3fjw75k";
-    ListView produceListView;
-    //ResponseSupermarketAPI responseObj;
-    ProductAdapter productAdapter;
-    // AsyncHttpClient client;
+
+    private static final String TAG = "ProductActivity";
+
+    ListView storeListView;
+    StoreAdapter storeAdapter;
+
+    List<Product> productResultList = null;
+    List<Store> storeResultList = null;
+
+    ArrayList<String> productSearchArr = new ArrayList<String>();
+
+    List<Store> storePassParam;
+
+    StoreService storeService;
+
+    String city = null;
+    String state = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.product_list);
-
+        setContentView(R.layout.store_list);
+//        storeService = new StoreService();
+//        List<Store> storeList = storeService.getStore();
+        productSearchArr.add("chicken");
+        productSearchArr.add("beef");
+        productSearchArr.add("apple");
+        productSearchArr.add("banana");
+        productSearchArr.add("orange");
+        productSearchArr.add("chocolate");
+        productSearchArr.add("chip");
         //Get reference to our ListView
-        produceListView = (ListView) findViewById(R.id.sitesList);
+       storeListView = (ListView) findViewById(R.id.storeList);
 
         /**
          * Set the click listener to launch the browser when a row is clicked.
          */
-        produceListView.setOnItemClickListener(
+        storeListView.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     /**
                      * Callback method to be invoked when an item in this AdapterView has
@@ -68,11 +90,34 @@ public class ProductActivity extends Activity {
 		 */
         if (isNetworkAvailable()) {
             Log.i("StackSites", "starting download Task");
-            DownloadTask download = new DownloadTask();
-            download.execute(obtainURL(searchProduct, searchStoreID));
-        }else{
-            productAdapter = new ProductAdapter(ProductActivity.this, -1, ProductXmlPullParser.getListFromFile(ProductActivity.this));
-            produceListView.setAdapter(productAdapter);
+
+            DownloadTaskStore downloadStore = new DownloadTaskStore();
+            downloadStore.execute(obtainStoreURL(city, state));
+
+            DownloadTaskProduct downloadProduct = new DownloadTaskProduct();
+
+            storeResultList = StoreXmlPullParser.getListFromFile(ProductActivity.this);
+            storeAdapter = new StoreAdapter(ProductActivity.this, -1,storeResultList);
+            storeListView.setAdapter(storeAdapter);
+
+            for (int i = 0; i < storeResultList.size(); i++ ) {
+                String storeID = storeResultList.get(i).getStoreId();
+//                for (int j = 0; j < productSearchArr.size(); j++) {
+//                    String itemName = productSearchArr.get(j);
+//                    downloadProduct.execute(obtainProductURL(itemName, storeID));
+//                    String productName = ProductXmlPullParser.getListFromFile(ProductActivity.this).get(0).getItemName();
+//                    if (!"NOITEM".equals(productName)) {
+//                        storeResultList.get(i).setItemName(productName);
+//                    }
+//                }
+            }
+
+//            Collections.sort(storeResultList);
+//            for (int i = 0; i < 5; i++) {
+//                storePassParam.add(storeResultList.get(i));
+//            }
+
+
         }
     }
 
@@ -88,35 +133,58 @@ public class ProductActivity extends Activity {
 	 * AsyncTask that will download the xml file for us and store it locally.
 	 * After the download is done we'll parse the local file.
 	 */
-    private class DownloadTask extends AsyncTask<String, Void, Void> {
+    private class DownloadTaskProduct extends AsyncTask<String, Void, Void> {
 
         @Override
         protected Void doInBackground(String... arg) {
             //Download the file
             try {
-                Downloader.DownloadFromUrl(arg[0], openFileOutput("COMMERCIAL_SearchForItem.xml", Context.MODE_PRIVATE));
+                for (int i = 0; i < arg.length; i++) {
+                    Downloader.DownloadFromUrl(arg[i], openFileOutput("COMMERCIAL_SearchForItem.xml", Context.MODE_PRIVATE));
+                }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
 
             return null;
         }
+    }
+
+    public String obtainProductURL(String searchItem,String storeId) {
+        String replacedItem = searchItem.replace(" ", "%20");
+
+       // String[] urlStringArray = new String[storeObjList.size()];
+//        for (int i = 0; i < storeObjList.size(); i++) {
+//            String URL = "http://www.supermarketapi.com/api.asmx/" +
+//                    "COMMERCIAL_SearchForItem?APIKEY=6471b24741&StoreId="
+//                    + storeObjList.get(i).getStoreId() + "&ItemName=" + replacedItem;
+//            urlStringArray[i] = URL;
+//        }
+//        return urlStringArray;
+        String URL = "http://www.supermarketapi.com/api.asmx/" +
+                "COMMERCIAL_SearchForItem?APIKEY=6471b24741&StoreId="
+                + storeId + "&ItemName=" + replacedItem;
+        return URL;
+    }
+
+    private class DownloadTaskStore extends AsyncTask<String, Void, Void> {
 
         @Override
-        protected void onPostExecute(Void result){
-            //setup our Adapter and set it to the ListView.
-
-            productAdapter = new ProductAdapter(ProductActivity.this, -1, ProductXmlPullParser.getListFromFile(ProductActivity.this));
-            produceListView.setAdapter(productAdapter);
-
-           // Log.i("StackSites", "adapter size = "+ mAdapter.getCount());
+        protected Void doInBackground(String... arg0) {
+            //Download the file
+            try {
+                Downloader.DownloadFromUrl(arg0[0],
+                        openFileOutput("StoresByCityState.xml", Context.MODE_PRIVATE));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
     }
 
-    public String obtainURL(String searchItem, String searchStoreId) {
-        String replacedItem = searchItem.replace(" ", "%20");
-
-        String URL = "http://www.supermarketapi.com/api.asmx/COMMERCIAL_SearchForItem?APIKEY=6471b24741&StoreId=" + searchStoreId + "&ItemName=" + replacedItem;
+    public String obtainStoreURL(String city, String state) {
+//        String cityReplace = city.replace(" ", "%20");
+        String URL = "http://www.supermarketapi.com/api.asmx/StoresByCityState?APIKEY=6471b24741&SelectedCity=San%20Francisco&SelectedState=CA";
         return URL;
     }
 }
