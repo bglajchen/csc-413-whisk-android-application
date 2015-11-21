@@ -17,8 +17,9 @@ public class Store implements Comparator<Store>, Comparable<Store> {
     private ArrayList<String> itemsName;
 
     public  Store(){
-
+        itemsName = new ArrayList<String>();
     }
+
     public void setStorename(String Storename) {
         this.Storename = Storename;
     }
