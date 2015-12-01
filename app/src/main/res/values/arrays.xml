@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="Favourites">
-        <item name="5">5 mins</item>
-        <item name="10">10 mins</item>
-        <item name="15">15 mins</item>
-        <item name="20">20 mins</item>
+    <string-array name="Colors">
+        <item name="Melody One">Music Box</item>
+        <item name="Melody Two">Classic Tone</item>
+        <item name="Alert">Alert</item>
+        <item name="Siren">Siren</item>
     </string-array>
-    <string-array name="FavouritesValue">
-        <item name="5">5</item>
-        <item name="10">10</item>
-        <item name="15">15</item>
-        <item name="20">20</item>
+    <string-array name="ColorsValue">
+        <item name="1">musicbox</item>
+        <item name="2">prelude</item>
+        <item name="3">loudalarm</item>
+        <item name="4">tornadosiren</item>
     </string-array>
 
 </resources>

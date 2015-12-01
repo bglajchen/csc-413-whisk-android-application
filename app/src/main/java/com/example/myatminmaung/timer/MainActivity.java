@@ -3,6 +3,8 @@ package com.example.myatminmaung.timer;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -32,18 +34,17 @@ import android.preference.PreferenceManager;
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 @SuppressLint("NewApi")
-public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener,GestureDetector.OnDoubleTapListener {
+public class MainActivity extends AppCompatActivity{
 
-    Button stopAlert;
+    Button stopAlert, start, pause, resume, reset;
     NumberPicker numberRollMin,numberRollHr,numberRollSec;
     ProgressBar timeProgress;
-    TextView time,textButton;
-    MediaPlayer stopClick;
-    GestureDetectorCompat gestureDetect;
+    TextView time,textHr,textMin,textSec;
+    MediaPlayer playClip;
     NotificationManager notimanager;
     CounterClass timer;
     long totalTime;
-    boolean resetGuard=false, startGuard=false, pauseGuard=false, resumeGuard=false;
+    boolean resetGuard=false;
     int hou,minu,secd,timeMax, progressCounter=0;
     private static final int RESULT_SETTINGS = 1;
 
@@ -56,11 +57,26 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         //*** Declaring and Connecting ID ***//
         // Button id is connected
         stopAlert=(Button)findViewById(R.id.stopRing);
+        start=(Button)findViewById(R.id.buttonStart);
+        pause=(Button)findViewById(R.id.buttonPause);
+        resume=(Button)findViewById(R.id.buttonResume);
+        reset=(Button)findViewById(R.id.buttonReset);
+
+        //Visibility for button
+        pause.setVisibility(View.INVISIBLE);
+        resume.setVisibility(View.INVISIBLE);
+        reset.setVisibility(View.INVISIBLE);
+
+
+        //ProgressBar ID
         timeProgress=(ProgressBar)findViewById(R.id.progressBar);
 
         //TextView id is connected
         time=(TextView)findViewById(R.id.timeText);
-        textButton=(TextView)findViewById(R.id.textStart);
+        textHr=(TextView)findViewById(R.id.hourstext);
+        textMin=(TextView)findViewById(R.id.mintext);
+        textSec=(TextView)findViewById(R.id.sectext);
+
 
         //NumberPicker id is connected
         numberRollHr=(NumberPicker)findViewById(R.id.numberPickerHR);
@@ -79,10 +95,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         //Sec
         numberRollSec.setMaxValue(60);
         numberRollSec.setMinValue(0);
-
-        //GestureDetector
-        this.gestureDetect= new GestureDetectorCompat(this,this);
-        gestureDetect.setOnDoubleTapListener(this);
 
         //Invisible for Textview
         time.setVisibility(View.INVISIBLE);
@@ -107,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             @Override
             public void onValueChange(NumberPicker picker, int
                     oldVal, int newVal) {
-                minu=numberRollMin.getValue();
+                minu = numberRollMin.getValue();
             }
         });
 
@@ -121,27 +133,154 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             }
         });
 
+        //*** Button Listners ***//
+        //Start listner
+        start.setOnClickListener(
+                new Button.OnClickListener() {
+                    public void onClick(View v) {
+
+                        //resetGuard set to true
+                        resetGuard = true;
+
+                        //Invisible for EditTexts
+                        numberRollHr.setVisibility(View.INVISIBLE);
+                        numberRollMin.setVisibility(View.INVISIBLE);
+                        numberRollSec.setVisibility(View.INVISIBLE);
+                        textHr.setVisibility(View.INVISIBLE);
+                        textMin.setVisibility(View.INVISIBLE);
+                        textSec.setVisibility(View.INVISIBLE);
+
+                        //Visibility for Button
+                        start.setVisibility(View.INVISIBLE);
+                        pause.setVisibility(View.VISIBLE);
+                        reset.setVisibility(View.VISIBLE);
+
+                        //Visible for TextView
+                        time.setVisibility(View.VISIBLE);
+                        timeProgress.setVisibility(View.VISIBLE);
+
+                        hou = hou * 3600000;
+                        minu = minu * 60000;
+                        secd = secd * 1000;
+
+                        totalTime = hou + minu + secd;
+                        timeMax= hou + minu + secd;
+
+                        //******* Setting timer(CHECK BACK AGAIN)
+                        if (hou >= 0 || minu >= 0 || secd >= 0) {
+                            //CounterClass
+                            timer = new CounterClass(totalTime, 1000);
+                        }
+                        timer.start();
+                        hou=minu=secd=0;
+
+                    }
+                }
+
+        );
+
+        //pause listner
+        pause.setOnClickListener(
+                new Button.OnClickListener() {
+                    public void onClick(View v) {
+
+                        //Visibility for button
+                        pause.setVisibility(View.INVISIBLE);
+                        resume.setVisibility(View.VISIBLE);
+
+                        timer.cancel();
+                    }
+                }
+
+        );
+
+        //resume listner
+        resume.setOnClickListener(
+                new Button.OnClickListener() {
+                    public void onClick(View v) {
+
+
+                        //Visibility for button
+                        pause.setVisibility(View.VISIBLE);
+                        resume.setVisibility(View.INVISIBLE);
+
+                        timer = new CounterClass(totalTime, 1000);
+                        timer.start();
+                    }
+                }
+
+        );
+
+        //reset listner
+        reset.setOnClickListener(
+                new Button.OnClickListener() {
+                    public void onClick(View v) {
+
+                        if(resetGuard){
+                            timer.cancel();
+                        }
+
+                        //Visibility for button
+                        start.setVisibility(View.VISIBLE);
+                        pause.setVisibility(View.INVISIBLE);
+                        resume.setVisibility(View.INVISIBLE);
+                        reset.setVisibility(View.INVISIBLE);
+                        textHr.setVisibility(View.VISIBLE);
+                        textMin.setVisibility(View.VISIBLE);
+                        textSec.setVisibility(View.VISIBLE);
+
+
+                        //Empty ProgressBar
+                        progressCounter=0;
+
+
+                        //Invisible for Textview
+                        time.setVisibility(View.INVISIBLE);
+                        timeProgress.setVisibility(View.INVISIBLE);
+
+                        //Visible for EditTexts
+                        numberRollHr.setVisibility(View.VISIBLE);
+                        numberRollMin.setVisibility(View.VISIBLE);
+                        numberRollSec.setVisibility(View.VISIBLE);
+
+                        //Text color
+                        time.setTextColor(Color.BLACK);
+
+                        //Notification cancel
+                        notimanager.cancel(2);
+
+                        //Set NumberPicker
+                        numberRollHr.setValue(0);
+                        numberRollMin.setValue(0);
+                        numberRollSec.setValue(0);
+                    }
+                }
+
+        );
+
+
+
         //StopAlert listner
         stopAlert.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
 
-                        //Invisibility for Button
+                        //Visibility for Button
                         stopAlert.setVisibility(View.INVISIBLE);
+                        pause.setVisibility(View.INVISIBLE);
+                        resume.setVisibility(View.INVISIBLE);
+                        start.setVisibility(View.VISIBLE);
+                        reset.setVisibility(View.VISIBLE);
+                        reset.setVisibility(View.INVISIBLE);
 
                         //Visibility
                         numberRollHr.setVisibility(View.VISIBLE);
                         numberRollMin.setVisibility(View.VISIBLE);
                         numberRollSec.setVisibility(View.VISIBLE);
-                        textButton.setVisibility(View.VISIBLE);
+                        textHr.setVisibility(View.VISIBLE);
+                        textMin.setVisibility(View.VISIBLE);
+                        textSec.setVisibility(View.VISIBLE);
 
-                        //StartGuard
-                        startGuard=false;
-                        pauseGuard=false;
-                        resumeGuard=false;
-
-                        //Set text to textButton
-                        textButton.setText(">> Start >>");
 
                         //Delete Notification
                         notimanager.cancel(1);
@@ -156,14 +295,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                         //Text Color
                         time.setTextColor(Color.BLACK);
 
-                        stopClick.stop();
+                        playClip.stop();
                     }
                 }
 
         );
 
-        //Preference....
-        showUserSettings();
     }
     /***CountDownClass override***/
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
@@ -185,18 +322,23 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
             //Invisibility for button
             time.setVisibility(View.INVISIBLE);
-            textButton.setVisibility(View.INVISIBLE);
             timeProgress.setVisibility(View.INVISIBLE);
 
             //Visibility for button
             stopAlert.setVisibility(View.VISIBLE);
+            pause.setVisibility(View.INVISIBLE);
+            resume.setVisibility(View.INVISIBLE);
+            start.setVisibility(View.INVISIBLE);
+            reset.setVisibility(View.INVISIBLE);
+            reset.setVisibility(View.INVISIBLE);
 
             //Empty ProgressBar
             progressCounter=0;
 
             //Setting Up AlertSound
-            stopClick = MediaPlayer.create(MainActivity.this,R.raw.loudalarm);
-            stopClick.start();
+            //Preference....
+            showUserSettings();
+            playClip.start();
 
             //Setting up Notification
             NotificationCompat.Builder notification= new NotificationCompat.Builder(MainActivity.this)
@@ -244,10 +386,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             //***Setting up Notification
             NotificationCompat.Builder notiStatus= new NotificationCompat.Builder(MainActivity.this)
                     .setTicker(hms)
-                    .setSmallIcon(R.drawable.creme_brelee)
+                    .setSmallIcon(R.drawable.hourglass)
                     .setContentTitle("Cooking Done in: " + hms);
 
-
+            Bitmap picture= BitmapFactory.decodeResource(getResources(), R.drawable.hourglass);
+            notiStatus.setLargeIcon(picture);
 
             //Notification Action
             PendingIntent myPendingIntent;
@@ -273,184 +416,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             time.setText(hms);
         }
     }
-
-
-    /***Gesture****/
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        this.gestureDetect.onTouchEvent(event);
-        return super.onTouchEvent(event);
-    }
-
-    //Resume
-    @Override
-    public boolean onDoubleTap(MotionEvent e) {
-
-        if(!resumeGuard){
-
-           /* Toast.makeText(getApplicationContext(), "Timer need to be Started",
-                    Toast.LENGTH_SHORT).show();*/
-
-            return true;
-        }
-
-        //Set text to textButton
-        textButton.setText("> Pause <");
-
-        //resumeGuard
-        resumeGuard=true;
-
-        timer = new CounterClass(totalTime,1000);
-        timer.start();
-        return true;
-    }
-
-    @Override
-    public boolean onSingleTapConfirmed(MotionEvent e) {
-        //time.setText("onSingleTapConfirmed");
-        return true;
-    }
-
-    @Override
-    public boolean onDoubleTapEvent(MotionEvent e) {
-        //time.setText("onDoubleTapEvent");
-        return true;
-    }
-
-    @Override
-    public boolean onDown(MotionEvent e) {
-        //time.setText("onDown");
-        return true;
-    }
-
-    @Override
-    public void onShowPress(MotionEvent e) {
-        //time.setText("onShowPress");
-
-    }
-
-    //Pause
-    @Override
-    public boolean onSingleTapUp(MotionEvent e) {
-
-        if(!pauseGuard){
-
-            /*Toast.makeText(getApplicationContext(), "Timer need to be Started",
-                    Toast.LENGTH_SHORT).show();*/
-
-            return true;
-        }
-
-        //set text to textbutton
-        textButton.setText(">> Resume <<");
-
-        //pauseGuard
-        pauseGuard=true;
-
-        timer.cancel();
-
-        return true;
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        //time.setText("onScroll");
-        return true;
-    }
-
-    //Reset Button
-    @Override
-    public void onLongPress(MotionEvent e) {
-
-        if(resetGuard){
-            timer.cancel();
-        }
-
-        //StartGuard
-        startGuard=false;
-        pauseGuard=false;
-        resumeGuard=false;
-
-        //Set text to textButton
-        textButton.setText(">> Start >>");
-
-        //Empty ProgressBar
-        progressCounter=0;
-
-
-        //Invisible for Textview
-        time.setVisibility(View.INVISIBLE);
-        timeProgress.setVisibility(View.INVISIBLE);
-
-        //Visible for EditTexts
-        numberRollHr.setVisibility(View.VISIBLE);
-        numberRollMin.setVisibility(View.VISIBLE);
-        numberRollSec.setVisibility(View.VISIBLE);
-
-        //Text color
-        time.setTextColor(Color.BLACK);
-
-        //Notification cancel
-        notimanager.cancel(2);
-
-        //Set NumberPicker
-        numberRollHr.setValue(0);
-        numberRollMin.setValue(0);
-        numberRollSec.setValue(0);
-
-    }
-
-    //Start Button
-    @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-
-        //resetGuard set to true
-        if(!startGuard){
-            resetGuard = true;
-            startGuard= true;
-            pauseGuard=true;
-            resumeGuard=true;
-
-            //Set text to textButton
-            textButton.setText("> Pause <");
-
-            //reset remainder
-            Toast.makeText(getApplicationContext(), "Long Press to Reset",
-                    Toast.LENGTH_SHORT).show();
-
-            //Invisible for EditTexts
-            numberRollHr.setVisibility(View.INVISIBLE);
-            numberRollMin.setVisibility(View.INVISIBLE);
-            numberRollSec.setVisibility(View.INVISIBLE);
-
-            //Visible for TextView
-            time.setVisibility(View.VISIBLE);
-            timeProgress.setVisibility(View.VISIBLE);
-
-            hou = hou * 3600000;
-            minu = minu * 60000;
-            secd = secd * 1000;
-
-            totalTime = hou + minu + secd;
-            timeMax= hou + minu + secd;
-
-            //******* Setting timer(CHECK BACK AGAIN)
-            if (hou >= 0 || minu >= 0 || secd >= 0) {
-                //CounterClass
-                timer = new CounterClass(totalTime, 1000);
-            }
-            timer.start();
-            hou=minu=secd=0;
-            return true;
-        }
-
-        Toast.makeText(getApplicationContext(), "Timer is already Started",
-                Toast.LENGTH_SHORT).show();
-        return true;
-    }
-
-    /*****End**/
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -503,10 +468,25 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         SharedPreferences sharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(this);
 
-        String favTime= sharedPrefs.getString("prefSyncFrequency", "");
+        String favTone= sharedPrefs.getString("prefSyncFrequency", "");
 
-        numberRollMin.setValue(Integer.parseInt(favTime));
-        minu=numberRollMin.getValue();
+        switch (favTone){
+
+            case "musicbox":
+                playClip = MediaPlayer.create(MainActivity.this,R.raw.musicbox);
+                break;
+            case "prelude":
+                playClip = MediaPlayer.create(MainActivity.this,R.raw.prelude);
+                break;
+            case "loudalarm":
+                playClip = MediaPlayer.create(MainActivity.this,R.raw.loudalarm);
+                break;
+            case "tornadosiren":
+                playClip = MediaPlayer.create(MainActivity.this,R.raw.tornadosiren);
+                break;
+            default:
+                playClip = MediaPlayer.create(MainActivity.this,R.raw.loudalarm);
+        }
 
    }
 

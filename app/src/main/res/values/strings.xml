@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Timer</string>
+    <string name="app_name">Cooking Timer</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -22,8 +22,8 @@
 
     <string name="pref_send_report">Send crash reports</string>
     <string name="pref_send_report_summary">Helps to fix bugs</string>
-    <string name="favouriteString">Favourites</string>
-    <string name="chooseString">Choose the favourite timer</string>
+    <string name="favouriteString">Alert Tones</string>
+    <string name="chooseString">Choose the Alert Tones</string>
     <string name="pref_user_name">Set username</string>
     <string name="pref_user_name_summary">Set your username</string>
 
