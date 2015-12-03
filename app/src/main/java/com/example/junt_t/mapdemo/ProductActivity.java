@@ -32,10 +32,11 @@ public class ProductActivity extends Activity {
     ListView itemListView;
     ProductAdapter productAdapter;
 
-    List<Product> productResultList = null;
-    List<Store> storeResultList = null;
+    List<Product> productTempList = new ArrayList<Product>();
+    List<Product> productResultList = new ArrayList<Product>();
+    List<Store> storeResultList = new ArrayList<Store>();
 
-    ArrayList<String> productSearchArr = new ArrayList<String>();
+    List<String> productSearchArr = new ArrayList<String>();
 
     List<Store> storePassParam;
 
@@ -51,7 +52,8 @@ public class ProductActivity extends Activity {
 //        setContentView(R.layout.store_list);
 //        storeService = new StoreService();
 //        List<Store> storeList = storeService.getStore();
-        setContentView(R.layout.item_list);
+        setContentView(R.layout.store_list);
+
 
         productSearchArr.add("chicken");
         productSearchArr.add("beef");
@@ -60,6 +62,7 @@ public class ProductActivity extends Activity {
         productSearchArr.add("orange");
         productSearchArr.add("chocolate");
         productSearchArr.add("chip");
+
         //Get reference to our ListView
         storeListView = (ListView) findViewById(R.id.storeList);
         itemListView = (ListView) findViewById(R.id.productList);
@@ -67,7 +70,7 @@ public class ProductActivity extends Activity {
         /**
          * Set the click listener to launch the browser when a row is clicked.
          */
-//        itemListView.setOnItemClickListener(
+//       itemListView.setOnItemClickListener(
 //                new AdapterView.OnItemClickListener() {
 //                    /**
 //                     * Callback method to be invoked when an item in this AdapterView has
@@ -100,21 +103,56 @@ public class ProductActivity extends Activity {
 
             DownloadTaskStore downloadStore;
             DownloadTaskProduct downloadProduct;
-
-            //  download and parse the xml file for stores
             downloadStore = new DownloadTaskStore();
-            downloadStore.execute(obtainStoreURL(city, state));
+            downloadStore.execute("http://www.supermarketapi.com/api.asmx/StoresByCityState?APIKEY=6471b24741&SelectedCity=San%20Francisco&SelectedState=CA");
             storeResultList = StoreXmlPullParser.getListFromFile(ProductActivity.this);
 
-            for (int i = 0; i < storeResultList.size(); i++ ) {
-                String storeID = storeResultList.get(i).getStoreId();
-                for (int j = 0; j < productSearchArr.size(); j++) {
-                    String itemName = productSearchArr.get(j);
+            for (int i = 0; i < storeResultList.size(); i++) {
+                downloadProduct = new DownloadTaskProduct();
+                downloadProduct.execute("http://www.supermarketapi.com/api.asmx/COMMERCIAL_SearchForItem?APIKEY=APIKEY" +
+                        "&StoreId=" + storeResultList.get(i).getStoreId() +
+                        "&ItemName=" + "chicken");
+                productResultList = ProductXmlPullParser.getListFromFile(ProductActivity.this);
+                storeResultList.get(i).setAisleNumber(productResultList.get(0).getAisleNumber());
+            }
+            storeAdapter = new StoreAdapter(ProductActivity.this, -1,storeResultList);
+            storeListView.setAdapter(storeAdapter);
+//            for (int i = 0; i < productSearchArr.size();i++ ) {
 
-                    //  download and parse the xml file for items
-                    downloadProduct = new DownloadTaskProduct();
-                    downloadProduct.execute(obtainProductURL(itemName, storeID));
-                    productResultList = ProductXmlPullParser.getListFromFile(ProductActivity.this);
+
+
+//            productResultList.add(ProductXmlPullParser.getListFromFile(ProductActivity.this).get(0));
+
+
+               // if (!ProductXmlPullParser.getListFromFile(ProductActivity.this).isEmpty()) {
+
+//                }
+//            if (!productTempList.isEmpty()) {
+//                productResultList.add(productTempList.get(0));
+//            }
+
+//            }
+//            productAdapter = new ProductAdapter(ProductActivity.this, -1, ProductXmlPullParser.getListFromFile(ProductActivity.this));
+//            itemListView.setAdapter(productAdapter);
+
+
+            //storeListView.setAdapter(storeAdapter);
+
+
+            //  download and parse the xml file for stores
+//            downloadStore = new DownloadTaskStore();
+//            downloadStore.execute(obtainStoreURL(city, state));
+//            storeResultList = StoreXmlPullParser.getListFromFile(ProductActivity.this);
+
+//            for (int i = 0; i < storeResultList.size(); i++ ) {
+//                String storeID = storeResultList.get(i).getStoreId();
+//                for (int j = 0; j < productSearchArr.size(); j++) {
+//                    String itemName = productSearchArr.get(j);
+//
+//                    //  download and parse the xml file for items
+//                    downloadProduct = new DownloadTaskProduct();
+//                    downloadProduct.execute(obtainProductURL(itemName, storeID));
+//                    productResultList = ProductXmlPullParser.getListFromFile(ProductActivity.this);
 
                     // getting the first item name from the prodoct list and
                     //  adding to the store list
@@ -124,8 +162,8 @@ public class ProductActivity extends Activity {
                     if (!"NOITEM".equals(productName)) {
                         storeResultList.get(i).setItemName(productName);
                     }*/
-                }
-            }
+//                }
+//            }
 
           /*  Collections.sort(storeResultList);
             for (int i = 0; i < 5; i++) {
@@ -133,8 +171,8 @@ public class ProductActivity extends Activity {
             }*/
 
             //test the product list from parsing xml file
-            productAdapter = new ProductAdapter(ProductActivity.this, -1,productResultList);
-            itemListView.setAdapter(productAdapter);
+//            productAdapter = new ProductAdapter(ProductActivity.this, -1,productResultList);
+//            itemListView.setAdapter(productAdapter);
            /* storeAdapter = new StoreAdapter(ProductActivity.this, -1,storeResultList);
             storeListView.setAdapter(storeAdapter);*/
         } else {
@@ -174,9 +212,15 @@ public class ProductActivity extends Activity {
             }
             return null;
         }
+
+        @Override
+        protected void onPostExecute(Void result){
+            productAdapter = new ProductAdapter(ProductActivity.this, -1,ProductXmlPullParser.getListFromFile(ProductActivity.this));
+            //itemListView.setAdapter(productAdapter);
+        }
     }
 
-    public String obtainProductURL(String searchItem,String storeId) {
+    public String obtainProductURL(String searchItem) {
         String replacedItem = searchItem.replace(" ", "%20");
 
        // String[] urlStringArray = new String[storeObjList.size()];
@@ -187,8 +231,8 @@ public class ProductActivity extends Activity {
 //            urlStringArray[i] = URL;
 //        }
 //        return urlStringArray;
-        String URL = "http://www.SupermarketAPI.com/api.asmx/COMMERCIAL_SearchForItem?APIKEY=6471b24741&StoreId="
-                + storeId + "&ItemName=" + replacedItem;
+        String URL = "http://www.supermarketapi.com/api.asmx/SearchByProductName?APIKEY=6471b24741&ItemName="
+                + replacedItem;
         return URL;
     }
 
@@ -205,6 +249,16 @@ public class ProductActivity extends Activity {
             }
             return null;
         }
+
+//        @Override
+//        protected void onPostExecute(Void result) {
+//            String storeID = StoreXmlPullParser.getListFromFile(ProductActivity.this).get(1).getStoreId();
+//            DownloadTaskProduct downloadProduct;
+//            downloadProduct = new DownloadTaskProduct();
+//            downloadProduct.execute("http://www.supermarketapi.com/api.asmx/COMMERCIAL_SearchForItem?APIKEY=APIKEY" +
+//                    "&StoreId=" + "e6k3fjw187" +
+//                    "&ItemName=" +"Apple");
+//        }
     }
 
     public String obtainStoreURL(String city, String state) {

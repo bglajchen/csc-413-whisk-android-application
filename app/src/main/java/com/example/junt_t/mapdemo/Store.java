@@ -6,18 +6,18 @@ import java.util.*;
 /**
  * Created by Junt_T on 2015/11/4 0004.
  */
-public class Store implements Comparator<Store>, Comparable<Store> {
-    private String Storename;
-    private String Address;
-    private String City;
-    private String State;
-    private String Zip;
-    private String Phone;
-    private String StoreId;
-    private ArrayList<String> itemsName;
+public class Store /*implements Comparator<Store>, Comparable<Store>*/ {
+    private String Storename = null;
+    private String Address = null;
+    private String City = null;
+    private String State = null;
+    private String Zip = null;
+    private String Phone = null;
+    private String StoreId = null;
+    private String itemsName = null;
+    private String  aisleNumber = null;
 
     public  Store(){
-        itemsName = new ArrayList<String>();
     }
 
     public void setStorename(String Storename) {
@@ -49,7 +49,11 @@ public class Store implements Comparator<Store>, Comparable<Store> {
     }
 
     public void setItemName(String itemName) {
-        this.itemsName.add(itemName);
+        this.itemsName = itemName;
+    }
+
+    public void setAisleNumber(String aisleNumber) {
+        this.aisleNumber = aisleNumber;
     }
 
     public String getStorename() {
@@ -80,8 +84,12 @@ public class Store implements Comparator<Store>, Comparable<Store> {
         return StoreId;
     }
 
-    public ArrayList getItemName() {
+    public String getItemName() {
         return itemsName;
+    }
+
+    public String getAisleNumber() {
+        return aisleNumber;
     }
 
     /**
@@ -96,10 +104,10 @@ public class Store implements Comparator<Store>, Comparable<Store> {
      * @throws ClassCastException if {@code another} cannot be converted into something
      *                            comparable to {@code this} instance.
      */
-    @Override
-    public int compareTo(Store another) {
-        return (this.itemsName.size()) - (another.getItemName().size());
-    }
+//    @Override
+//    public int compareTo(Store another) {
+//        return (this.itemsName.size()) - (another.getItemName().size());
+//    }
 
     /**
      * Compares the two specified objects to determine their relative ordering. The ordering
@@ -121,8 +129,8 @@ public class Store implements Comparator<Store>, Comparable<Store> {
      * equal, and > 0 if {@code lhs} is greater than {@code rhs}.
      * @throws ClassCastException if objects are not of the correct type.
      */
-    @Override
-    public int compare(Store lhs, Store rhs) {
-        return lhs.getItemName().size() - rhs.getItemName().size();
-    }
+//    @Override
+//    public int compare(Store lhs, Store rhs) {
+//        return lhs.getItemName().size() - rhs.getItemName().size();
+//    }
 }

@@ -68,48 +68,48 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         }
 
         //Get our View References
-       // final ImageView iconImg = (ImageView)row.findViewById(R.id.iconImg);
+        final ImageView iconImg = (ImageView)row.findViewById(R.id.iconImg);
         TextView nameTxt = (TextView)row.findViewById(R.id.nameTxt);
-        TextView aboutTxt = (TextView)row.findViewById(R.id.aboutTxt);
-        //final ProgressBar indicator = (ProgressBar)row.findViewById(R.id.progress);
+        TextView aboutTxt = (TextView)row.findViewById(R.id.desTxt);
+        final ProgressBar indicator = (ProgressBar)row.findViewById(R.id.progress);
 
         //Initially we want the progress indicator visible, and the image invisible
-       // indicator.setVisibility(View.VISIBLE);
-//        iconImg.setVisibility(View.INVISIBLE);
-//
-//        //Setup a listener we can use to swtich from the loading indicator to the Image once it's ready
-//        ImageLoadingListener listener = new ImageLoadingListener(){
-//
-//
-//
-//            @Override
-//            public void onLoadingStarted(String arg0, View arg1) {
-//                // TODO Auto-generated method stub
-//
-//            }
-//
-//            @Override
-//            public void onLoadingCancelled(String arg0, View arg1) {
-//                // TODO Auto-generated method stub
-//
-//            }
-//
-//            @Override
-//            public void onLoadingComplete(String arg0, View arg1, Bitmap arg2) {
-//                indicator.setVisibility(View.INVISIBLE);
-//                iconImg.setVisibility(View.VISIBLE);
-//            }
-//
-//            @Override
-//            public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
-//                // TODO Auto-generated method stub
-//
-//            }
-//
-//        };
-//
-//        //Load the image and use our options so caching is handled.
-//        imageLoader.displayImage(getItem(pos).getItemImage(), iconImg, options, listener);
+        indicator.setVisibility(View.VISIBLE);
+        iconImg.setVisibility(View.INVISIBLE);
+
+        //Setup a listener we can use to swtich from the loading indicator to the Image once it's ready
+        ImageLoadingListener listener = new ImageLoadingListener(){
+
+
+
+            @Override
+            public void onLoadingStarted(String arg0, View arg1) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onLoadingCancelled(String arg0, View arg1) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onLoadingComplete(String arg0, View arg1, Bitmap arg2) {
+                indicator.setVisibility(View.INVISIBLE);
+                iconImg.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
+                // TODO Auto-generated method stub
+
+            }
+
+        };
+
+        //Load the image and use our options so caching is handled.
+        imageLoader.displayImage(getItem(pos).getItemImage(), iconImg, options, listener);
 
         //Set the relavent text in our TextViews
         nameTxt.setText(getItem(pos).getItemName());
