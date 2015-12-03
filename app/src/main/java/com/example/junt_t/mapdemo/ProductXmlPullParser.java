@@ -49,7 +49,7 @@ public class ProductXmlPullParser {
             int eventType = xpp.getEventType();
 
             // Loop through pull events until we reach END_DOCUMENT
-            while (eventType != XmlPullParser.END_DOCUMENT) {
+            while (productList.size()<2) {
 
                 // Get the current tag
                 String tagName = xpp.getName();

@@ -42,7 +42,7 @@ public class StoreAdapter extends ArrayAdapter<Store> {
         //Set the relavent text in our TextViews
         nameTxt.setText(getItem(pos).getStorename());
         aboutTxt.setText(getItem(pos).getAddress());
-        idTxt.setText(getItem(pos).getStoreId());
+        idTxt.setText(getItem(pos).getItemName());
         cityTxt.setText(getItem(pos).getCity());
 
         return row;

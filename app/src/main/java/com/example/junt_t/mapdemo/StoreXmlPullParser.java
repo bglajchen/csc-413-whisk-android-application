@@ -49,7 +49,7 @@ public class StoreXmlPullParser {
             int eventType = xpp.getEventType();
 
             // Loop through pull events until we reach END_DOCUMENT
-            while (eventType != XmlPullParser.END_DOCUMENT) {
+            while (storeList.size() < 5) {
 
                 // Get the current tag
                 String tagName = xpp.getName();
@@ -74,7 +74,9 @@ public class StoreXmlPullParser {
                         if (tagName.equalsIgnoreCase(KEY_STORE)) {
                             // if </Store> then we are done with current Store
                             // add it to the list.
+
                             storeList.add(curStore);
+
                         } else if (tagName.equalsIgnoreCase(KEY_STORENAME)) {
                             // if </Storename> use setStorename() on curStore
                             curStore.setStorename(curText);
