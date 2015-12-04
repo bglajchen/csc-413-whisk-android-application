@@ -16,8 +16,6 @@ public class ProductXmlPullParser {
     static final String KEY_PRODUCT = "Product_Commercial";
     static final String KEY_ITEMNAME = "Itemname";
     static final String KEY_ITEMDESCRIPTION = "ItemDescription";
-    static final String KEY_ITEMCATEGORY = "ItemCategory";
-    static final String KEY_ITEMID = "ItemID";
     static final String KEY_IMAGE_URL = "ItemImage";
     static final String KEY_AISLENUMBER = "AisleNumber";
     static final String KEY_PRICING = "Pricing";
@@ -49,7 +47,7 @@ public class ProductXmlPullParser {
             int eventType = xpp.getEventType();
 
             // Loop through pull events until we reach END_DOCUMENT
-            while (productList.size()<2) {
+            while (productList.size() < 5) {
 
                 // Get the current tag
                 String tagName = xpp.getName();
@@ -81,12 +79,6 @@ public class ProductXmlPullParser {
                         } else if (tagName.equalsIgnoreCase(KEY_ITEMDESCRIPTION)) {
                             // if </ItemDescription> use setItemDescription() on curProduct
                             curProduct.setItemDescription(curText);
-                        } else if (tagName.equalsIgnoreCase(KEY_ITEMCATEGORY)) {
-                            // if </ItemCategory> use setItemCategory() on curProduct
-                            curProduct.setItemCategory(curText);
-                        } else if (tagName.equalsIgnoreCase(KEY_ITEMID)) {
-                            // if </ItemID> use setItemID() on curProduct
-                            curProduct.setItemID(curText);
                         }else if (tagName.equalsIgnoreCase(KEY_IMAGE_URL)) {
                             // if </ItemImage> use setItemImage() on curProduct
                             curProduct.setItemImage(curText);
@@ -95,6 +87,8 @@ public class ProductXmlPullParser {
                             curProduct.setAisleNumber(curText);
                         } else if (tagName.equals(KEY_PRICING)) {
                             curProduct.setPricing(curText);
+                        } else {
+                            break;
                         }
                         break;
                     default:
