@@ -1,3 +1,13 @@
+/***
+ * Name: Myat Min Maung (Dennis)
+ * Team: 3
+ * Application Name: Cooking Timer
+ * About Application: Cooking Timer can be used to count down a desired time
+ *                    for cooking a recipe. The timer can count down from
+ *                    3 hours (maximum). The choice for alert tone is also
+ *                    available in the setting at the top right corner of the
+ *                    application.
+ * */
 package com.example.myatminmaung.timer;
 
 import android.app.PendingIntent;
@@ -8,7 +18,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Build;
-import android.preference.PreferenceActivity;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,18 +26,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ProgressBar;
 import java.util.concurrent.TimeUnit;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.os.CountDownTimer;
 import android.app.NotificationManager;
-import android.widget.ProgressBar;
 import android.widget.NumberPicker;
-import android.view.MotionEvent;
-import android.view.GestureDetector;
-import android.support.v4.view.GestureDetectorCompat;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -36,16 +40,16 @@ import android.preference.PreferenceManager;
 @SuppressLint("NewApi")
 public class MainActivity extends AppCompatActivity{
 
-    Button stopAlert, start, pause, resume, reset;
-    NumberPicker numberRollMin,numberRollHr,numberRollSec;
-    ProgressBar timeProgress;
-    TextView time,textHr,textMin,textSec;
-    MediaPlayer playClip;
-    NotificationManager notimanager;
-    CounterClass timer;
-    long totalTime;
-    boolean resetGuard=false;
-    int hou,minu,secd,timeMax, progressCounter=0;
+    private Button stopAlert, start, pause, resume, reset;
+    private NumberPicker numberRollMin,numberRollHr,numberRollSec;
+    private  ProgressBar timeProgress;
+    private TextView time,textHr,textMin,textSec;
+    private MediaPlayer playClip;
+    private NotificationManager notimanager;
+    private CounterClass timer;
+    private long totalTime;
+    private boolean resetGuard=false;
+    private int hou,minu,secd,timeMax, progressCounter=0;
     private static final int RESULT_SETTINGS = 1;
 
 
@@ -142,21 +146,21 @@ public class MainActivity extends AppCompatActivity{
                         //resetGuard set to true
                         resetGuard = true;
 
-                        //Invisible for EditTexts
+                        //Invisible for NumberPicker/TextView
                         numberRollHr.setVisibility(View.INVISIBLE);
                         numberRollMin.setVisibility(View.INVISIBLE);
                         numberRollSec.setVisibility(View.INVISIBLE);
                         textHr.setVisibility(View.INVISIBLE);
                         textMin.setVisibility(View.INVISIBLE);
                         textSec.setVisibility(View.INVISIBLE);
+                        time.setVisibility(View.VISIBLE);
 
                         //Visibility for Button
                         start.setVisibility(View.INVISIBLE);
                         pause.setVisibility(View.VISIBLE);
                         reset.setVisibility(View.VISIBLE);
 
-                        //Visible for TextView
-                        time.setVisibility(View.VISIBLE);
+                        //Visible for ProgressBar
                         timeProgress.setVisibility(View.VISIBLE);
 
                         hou = hou * 3600000;
@@ -234,11 +238,11 @@ public class MainActivity extends AppCompatActivity{
                         progressCounter=0;
 
 
-                        //Invisible for Textview
+                        //Invisible for Textview/ProgressBar
                         time.setVisibility(View.INVISIBLE);
                         timeProgress.setVisibility(View.INVISIBLE);
 
-                        //Visible for EditTexts
+                        //Visible for NumberPicker
                         numberRollHr.setVisibility(View.VISIBLE);
                         numberRollMin.setVisibility(View.VISIBLE);
                         numberRollSec.setVisibility(View.VISIBLE);
@@ -270,10 +274,9 @@ public class MainActivity extends AppCompatActivity{
                         pause.setVisibility(View.INVISIBLE);
                         resume.setVisibility(View.INVISIBLE);
                         start.setVisibility(View.VISIBLE);
-                        reset.setVisibility(View.VISIBLE);
                         reset.setVisibility(View.INVISIBLE);
 
-                        //Visibility
+                        //Visibility for NumberPicker/TextView
                         numberRollHr.setVisibility(View.VISIBLE);
                         numberRollMin.setVisibility(View.VISIBLE);
                         numberRollSec.setVisibility(View.VISIBLE);
@@ -317,8 +320,6 @@ public class MainActivity extends AppCompatActivity{
         public void onFinish(){
 
             time.setTextColor(Color.BLACK);
-            time.setText("Stop !!!");
-
 
             //Invisibility for button
             time.setVisibility(View.INVISIBLE);
@@ -330,21 +331,22 @@ public class MainActivity extends AppCompatActivity{
             resume.setVisibility(View.INVISIBLE);
             start.setVisibility(View.INVISIBLE);
             reset.setVisibility(View.INVISIBLE);
-            reset.setVisibility(View.INVISIBLE);
 
             //Empty ProgressBar
             progressCounter=0;
 
-            //Setting Up AlertSound
-            //Preference....
+            //Setting Up AlertSound by User's Preference
             showUserSettings();
             playClip.start();
 
             //Setting up Notification
             NotificationCompat.Builder notification= new NotificationCompat.Builder(MainActivity.this)
-                    .setSmallIcon(R.drawable.creme_brelee)
+                    .setSmallIcon(R.drawable.hourglass)
                     .setContentTitle("Time is up!!!")
                     .setContentText("Stop Cooking :)");
+
+            Bitmap picture= BitmapFactory.decodeResource(getResources(), R.drawable.hourglass);
+            notification.setLargeIcon(picture);
 
             //Vibrate
             long [] vibrate= {0,100,200,300};
@@ -431,15 +433,6 @@ public class MainActivity extends AppCompatActivity{
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        /*int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);*/
-
         //Preference.....
         switch (item.getItemId()) {
 
@@ -451,6 +444,7 @@ public class MainActivity extends AppCompatActivity{
         return true;
     }
 
+    //Change setting of alert tone
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -464,6 +458,7 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
+    //Setting Up User's favourite Alert Tone
     private void showUserSettings() {
         SharedPreferences sharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(this);

@@ -3,7 +3,7 @@
     <string-array name="Colors">
         <item name="Melody One">Music Box</item>
         <item name="Melody Two">Classic Tone</item>
-        <item name="Alert">Alert</item>
+        <item name="Alert">Loud Alarm</item>
         <item name="Siren">Siren</item>
     </string-array>
     <string-array name="ColorsValue">
